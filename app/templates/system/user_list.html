@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>bootstrap-table - 后台管理系统模板</title>
+<link rel="icon" href="favicon.ico" type="image/ico">
+<meta name="keywords" content="后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="一个基于Bootstrap v3.3.7的后台管理系统的HTML模板。">
+<meta name="author" content="yinqi">
+<link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../static/css/materialdesignicons.min.css" rel="stylesheet">
+<link href="../../static/css/animate.css" rel="stylesheet">
+<link href="../../static/css/style.min.css" rel="stylesheet">
+<link href="../../static/js/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+</head>
+  
+<body>
+<div class="container-fluid p-t-15">
+  
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header"><h4>用户管理</h4></div>
+        <div class="card-body">
+          <form class="form-inline" action="forms_elements.html" method="post" onsubmit="return false;">
+            <div class="form-group">
+              <label class="sr-only" for="example-if-email">用户名称</label>
+              <input class="form-control" type="email" id="example-if-email" name="example-if-email" placeholder="请输入用户名..">
+            </div>
+            <div class="form-group">
+              <label class="sr-only" for="example-if-password">手机号</label>
+              <input class="form-control" type="password" id="example-if-password" name="example-if-password" placeholder="请输入手机号..">
+            </div>
+            <div class="form-group">
+              <button id="btn_query" type="button" class="btn btn-primary m-r-5">
+              <span class="mdi mdi-plus" aria-hidden="true"></span>查询
+              </button>
+            </div>
+            <div class="form-group">
+              <button id="btn_add" type="button" class="btn btn-primary m-r-5" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">
+              <span class="mdi mdi-plus" aria-hidden="true"></span>新增
+              </button>
+            </div>
+            <div class="form-group">
+              <button id="btn_delete" type="button" class="btn btn-danger">
+              <span class="mdi mdi-window-close" aria-hidden="true"></span>删除
+            </button>
+            </div>
+          </form>
+
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="exampleModalLabel">新增用户</h4>
+                </div>
+                <div class="modal-body">
+                  <form>
+                    <div class="form-group">
+                      <label for="login_name" class="control-label">登录名称：</label>
+                      <input type="text" class="form-control" id="login_name">
+                    </div>
+                    <div class="form-group">
+                      <label for="password" class="control-label">密码：</label>
+                      <input type="text" class="form-control" id="password">
+                    </div>
+                    <div class="form-group">
+                      <label for="user_name" class="control-label">用户名称：</label>
+                      <input type="text" class="form-control" id="user_name">
+                    </div>
+                    <div class="form-group">
+                      <label for="department" class="control-label">部门：</label>
+                      <input type="text" class="form-control" id="department">
+                    </div>
+                    <div class="form-group">
+                      <label for="phone" class="control-label">手机号：</label>
+                      <input type="text" class="form-control" id="phone">
+                    </div>
+                    <div class="form-group">
+                      <label for="email" class="control-label">邮箱：</label>
+                      <input type="email" class="form-control" id="email">
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary">发送消息</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <table id="tb_departments"></table>
+ 
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+</div>
+
+<script type="text/javascript" src="../../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../../static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../static/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="../../static/js/bootstrap-table/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="../../static/js/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+
+<!--行内编辑插件-->
+<link href="../../static/js/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.min.css" rel="stylesheet">
+<script type="text/javascript" src="../../static/js/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script type="text/javascript" src="../../static/js/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js"></script>
+
+<script type="text/javascript" src="../../static/js/main.min.js"></script>
+<script type="text/javascript">
+$('#tb_departments').bootstrapTable({
+    classes: 'table table-bordered table-hover table-striped',
+    url: '/system/userList',
+    method: 'get',
+    uniqueId: 'id',
+    idField: 'id',             // 每行的唯一标识字段
+    toolbar: '#toolbar',       // 工具按钮容器
+    //clickToSelect: true,     // 是否启用点击选中行
+    showColumns: true,         // 是否显示所有的列
+    showRefresh: true,         // 是否显示刷新按钮
+    
+    //showToggle: true,        // 是否显示详细视图和列表视图的切换按钮(clickToSelect同时设置为true时点击会报错)
+  
+    pagination: true,                    // 是否显示分页
+    sortOrder: "asc",                    // 排序方式
+    queryParams: function(params) {
+        var temp = {
+            limit: params.limit,         // 每页数据量
+            offset: params.offset,       // sql语句起始索引
+            page: (params.offset / params.limit) + 1,
+            sort: params.sort,           // 排序的列名
+            sortOrder: params.order      // 排序方式'asc' 'desc'
+        };
+        return temp;
+    },                                   // 传递参数
+    sidePagination: "server",            // 分页方式：client客户端分页，server服务端分页
+    pageNumber: 1,                       // 初始化加载第一页，默认第一页
+    pageSize: 10,                        // 每页的记录行数
+    pageList: [10, 25, 50, 100],         // 可供选择的每页的行数
+    //search: true,                      // 是否显示表格搜索，此搜索是客户端搜索
+    
+    //showExport: true,        // 是否显示导出按钮, 导出功能需要导出插件支持(tableexport.min.js)
+    //exportDataType: "basic", // 导出数据类型, 'basic':当前页, 'all':所有数据, 'selected':选中的数据
+  
+    columns: [{
+        checkbox: true    // 是否显示复选框
+    }, {
+        field: 'id',
+        title: '用户id',
+        sortable: true    // 是否排序
+    }, {
+        field: 'login_name',
+        title: '登录名称'
+    }, {
+        field: 'user_name',
+        title: '用户名称',
+    }, {
+        field: 'department',
+        title: '部门'
+    }, {
+        field: 'phone',
+        title: '手机号'
+    }, {
+        field: 'email',
+        title: '邮箱'
+    },{
+        field: 'create_time',
+        title: '创建时间'
+    },{
+        field: 'last_time',
+        title: '最后登录时间'
+    }, {
+        field: 'status',
+        title: '状态',
+        editable: {
+            type: 'select',
+            title: "状态",
+            pk: 1,
+            source: [
+                { value: 0, text: '禁用'},
+                { value: 1, text: '正常'}
+            ],
+            noeditFormatter: function (value, row, index) {
+                var result;
+                if (value == '0' || value == '禁用') {
+                    result = { filed: "status", value: "禁用", class: "label label-danger" };
+                } else if (value == '1' || value == '正常') {
+                    result = { filed: "status", value: "正常", class: "label label-success" };
+                }
+                
+                return result; // 这里对bootstrap-table-editable.min.js做了一些修改，让其能接收class
+            },
+            // 可以按列分开做保存，也可以用后面的onEditableSave
+            url: '/system/userList',
+            ajaxOptions: {
+                type: 'get',
+            }, // 默认是post方式提交,这里因为跨域,改成get
+            success: function(response, newValue) {
+                if (response.code == '200') {
+                    // 这里的状态显示有自定义样式区分，做单元格更新
+                    $('#tb_departments').bootstrapTable('updateCellById', {id: response.id, field: 'status', value: newValue});
+                } else {
+                    return response.msg;
+                }
+            },
+            highlight: false
+        }
+    }, {
+        field: 'operate',
+        title: '操作',
+        formatter: btnGroup,  // 自定义方法
+        events: {
+            'click .edit-btn': function (event, value, row, index) {
+                editUser(row.id);
+            },
+            'click .del-btn': function (event, value, row, index) {
+                delUser(row.id);
+            },
+            'click .show-btn': function (event, value, row, index) {
+                showUser(row);
+            }
+        }
+    }],
+    /*
+    onEditableSave: function (field, row, oldValue, $el) {
+        $.ajax({
+            type: "get",
+            url: "http://www.bixiaguangnian.com/index/test/testEditTwo",
+            data: row,
+            dataType: 'jsonp',
+            success: function (data, status) {
+                if (data.code == '200') {
+                    // 这里的状态显示有自定义样式区分，做单行的更新
+                    $('.example-table').bootstrapTable('updateRow', {index: row.id, row: row});
+                } else {
+                    alert(data.msg);
+                }
+            },
+            error: function () {
+                alert('修改失败，请稍后再试');
+            }
+        });
+    }
+    */
+    onLoadSuccess: function(data){
+        $("[data-toggle='tooltip']").tooltip();
+    }
+});
+
+// 操作按钮
+function btnGroup ()
+{
+    let html =
+        '<a href="#!" class="btn btn-xs btn-default m-r-5 edit-btn" title="编辑" data-toggle="tooltip"><i class="mdi mdi-pencil"></i></a>' +
+        '<a href="#!" class="btn btn-xs btn-default m-r-5 show-btn" title="查看" data-toggle="tooltip"><i class="mdi mdi-eye"></i></a>' +
+        '<a href="#!" class="btn btn-xs btn-default del-btn" title="删除" data-toggle="tooltip"><i class="mdi mdi-window-close"></i></a>';
+    return html;
+}
+
+// 操作方法 - 编辑
+function editUser()
+{
+    alert('编辑信息跳转');
+}
+// 操作方法 - 删除
+function delUser()
+{
+    alert('信息删除成功');
+}
+// 操作方法 - 查看
+function showUser()
+{
+    alert('查看详细');
+}
+</script>
+
+</body>
+</html>
