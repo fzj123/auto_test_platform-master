@@ -33,7 +33,7 @@ def user_list_query():
     len(result)
     return_dict['total'] = len(result)
     return_dict['rows'] = result
-
+    print(return_dict)
 
     return json.dumps(return_dict, ensure_ascii=False, cls=DateEncoder)
 
