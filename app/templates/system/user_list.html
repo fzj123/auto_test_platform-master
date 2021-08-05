@@ -85,7 +85,7 @@
                   </form>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-primary">发送消息</button>
+                  <button type="button" class="btn btn-primary" id="btn_submit">添加</button>
                   <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 </div>
               </div>
@@ -228,27 +228,6 @@ $('#tb_departments').bootstrapTable({
             }
         }
     }],
-    /*
-    onEditableSave: function (field, row, oldValue, $el) {
-        $.ajax({
-            type: "get",
-            url: "http://www.bixiaguangnian.com/index/test/testEditTwo",
-            data: row,
-            dataType: 'jsonp',
-            success: function (data, status) {
-                if (data.code == '200') {
-                    // 这里的状态显示有自定义样式区分，做单行的更新
-                    $('.example-table').bootstrapTable('updateRow', {index: row.id, row: row});
-                } else {
-                    alert(data.msg);
-                }
-            },
-            error: function () {
-                alert('修改失败，请稍后再试');
-            }
-        });
-    }
-    */
     onLoadSuccess: function(data){
         $("[data-toggle='tooltip']").tooltip();
     }
@@ -279,6 +258,21 @@ function showUser()
 {
     alert('查看详细');
 }
+</script>
+
+<script type="text/javascript">
+    $('#my_button').click(function () {
+        $.ajax({
+            url: '',
+            type: 'post',
+            contentType: 'application/json',
+            {#headers:{"X-csrftoken":$("[name='csrfmiddlewaretoken']").val()},#}
+            data: JSON.stringify({'username': 'hkk', 'password': '123'}),
+            success: function (data) {
+                alert(data)
+            }
+        })
+    })
 </script>
 
 </body>

@@ -4,11 +4,12 @@
 import datetime
 import json
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 from app.db.db_user_list import db_user_list
 
 mod = Blueprint('user_list', __name__,
                         template_folder='templates')
+
 
 
 #时间格式转换
@@ -37,6 +38,26 @@ def user_list_query():
 
     return json.dumps(return_dict, ensure_ascii=False, cls=DateEncoder)
 
+@mod.route('/system/addUser', methods=['POST'])
+def add_user():
+    print(request.headers)
+    data = request.get_json()
+    print('返回结果：{0}'.format(data))
+    login_name = data['login_name']
+    password = data['password']
+    user_name = data['user_name']
+    department = data['department']
+    phone = data['phone']
+    email = data['email']
+    print('login_name：{0},password：{1},user_name：{2},department：{3},phone：{4},email：{5}'.format(login_name, password,
+                                                                                                user_name, department,
+                                                                                                phone, email))
+
+    #数据库添加用户
+    db_user_list().add_user(login_name,password,user_name,department,phone,email,'1')
+
+    result = jsonify({'code':200,'msg': '添加用户成功'})
+    return result
 
 
 

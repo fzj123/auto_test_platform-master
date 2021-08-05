@@ -2,6 +2,8 @@
 # -*- coding:utf-8 -*-
 
 import string
+import time
+
 from app.models.mysql_tools import MsqlTools
 
 
@@ -32,11 +34,25 @@ class db_user_list:
 
         return results
 
+    def add_user(self,login_name,password,user_name,department,phone,email,status):
+        """
+        添加用户
+        :return:
+        """
+        now_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
+        dbUtil = MsqlTools()
+        sql = string.Template(
+            'insert into t_user (login_name,password,user_name,department,phone,email,create_time,last_time,status) values ("$login_name","$password","$user_name","$department","$phone","$email","$create_time","$last_time","$status");')
+        sql = sql.substitute(login_name=login_name, password=password, user_name=user_name, department=department,
+                             phone=phone, email=email, create_time=now_time, last_time=now_time, status=status)
+        str = MsqlTools.save(dbUtil, sql)
+        return str
+
 
 if __name__ == '__main__':
 
     s = db_user_list()
-    a = s.show_user_list()
-    c = len(a)
+    a = s.add_user('test05','123456','测试用户03','测试部门','13123223','1585813232@qq.com','1')
     print(a)
-    print(c)
+
