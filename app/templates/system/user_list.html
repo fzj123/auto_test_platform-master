@@ -25,16 +25,13 @@
         <div class="card-body">
           <form class="form-inline" action="forms_elements.html" method="post" onsubmit="return false;">
             <div class="form-group">
-              <label class="sr-only" for="example-if-email">用户名称</label>
-              <input class="form-control" type="email" id="example-if-email" name="example-if-email" placeholder="请输入用户名..">
+              <div class="col-md-7">
+                <input class="form-control" type="text" id="loginName" name="loginName" placeholder="请输入用户名称..">
+              </div>
             </div>
             <div class="form-group">
-              <label class="sr-only" for="example-if-password">手机号</label>
-              <input class="form-control" type="password" id="example-if-password" name="example-if-password" placeholder="请输入手机号..">
-            </div>
-            <div class="form-group">
-              <button id="btn_query" type="button" class="btn btn-primary m-r-5">
-              <span class="mdi mdi-plus" aria-hidden="true"></span>查询
+              <button id="btn_query" type="button" class="btn btn-secondary m-r-5">
+              <span class="mdi mdi-magnify" aria-hidden="true"></span>查询
               </button>
             </div>
             <div class="form-group">
@@ -49,7 +46,17 @@
             </div>
           </form>
 
-          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+          <table id="tb_departments"></table>
+ 
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -85,22 +92,13 @@
                   </form>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" id="btn_submit">添加</button>
+                  <button type="button" class="btn btn-primary" id="btn_submit" >添加</button>
                   <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 </div>
               </div>
             </div>
-          </div>
-
-          <table id="tb_departments"></table>
- 
-        </div>
-      </div>
-    </div>
-    
-  </div>
-  
 </div>
+
 
 <script type="text/javascript" src="../../static/js/jquery.min.js"></script>
 <script type="text/javascript" src="../../static/js/bootstrap.min.js"></script>
@@ -258,22 +256,31 @@ function showUser()
 {
     alert('查看详细');
 }
-</script>
 
-<script type="text/javascript">
-    $('#my_button').click(function () {
+$(document).ready(function(){
+  $("#btn_submit").click(function(){
+    //获取模态框数据
+        var login_name = $('#login_name').val();
+        var password = $('#password').val();
+        var user_name = $('#user_name').val();
+        var department = $('#department').val();
+        var phone = $('#phone').val();
+        var email = $('#email').val();
         $.ajax({
-            url: '',
+            url: '/system/addUser',
             type: 'post',
             contentType: 'application/json',
-            {#headers:{"X-csrftoken":$("[name='csrfmiddlewaretoken']").val()},#}
-            data: JSON.stringify({'username': 'hkk', 'password': '123'}),
-            success: function (data) {
-                alert(data)
+            data: JSON.stringify({"login_name": login_name, "password": password, "user_name": user_name, "department": department, "phone": phone, "email": email}),
+            success: function () {
+                 $('#exampleModal').modal('hide');
+
             }
-        })
-    })
+        });
+  });
+});
+
 </script>
+
 
 </body>
 </html>
