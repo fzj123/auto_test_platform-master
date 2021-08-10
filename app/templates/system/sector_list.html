@@ -26,7 +26,7 @@
           <form class="form-inline" action="forms_elements.html" method="post" onsubmit="return false;">
             <div class="form-group">
               <div class="col-md-7">
-                <input class="form-control" type="text" id="loginName" name="loginName" placeholder="请输入部门名称..">
+                <input class="form-control" type="text" id="sectorName" name="sectorName" placeholder="请输入部门名称..">
               </div>
             </div>
             <div class="form-group">
@@ -113,7 +113,8 @@ $('#tb_departments').bootstrapTable({
             offset: params.offset,       // sql语句起始索引
             page: (params.offset / params.limit) + 1,
             sort: params.sort,           // 排序的列名
-            sortOrder: params.order      // 排序方式'asc' 'desc'
+            sortOrder: params.order,      // 排序方式'asc' 'desc'
+            sector_name:$("#sectorName").val()
         };
         return temp;
     },                                   // 传递参数
@@ -142,44 +143,8 @@ $('#tb_departments').bootstrapTable({
         field: 'create_time',
         title: '创建时间'
     }, {
-        field: 'describe',
+        field: 'describes',
         title: '描述'
-    }, {
-        field: 'status',
-        title: '状态',
-        editable: {
-            type: 'select',
-            title: "状态",
-            pk: 1,
-            source: [
-                { value: 0, text: '禁用'},
-                { value: 1, text: '正常'}
-            ],
-            noeditFormatter: function (value, row, index) {
-                var result;
-                if (value == '0' || value == '禁用') {
-                    result = { filed: "status", value: "禁用", class: "label label-danger" };
-                } else if (value == '1' || value == '正常') {
-                    result = { filed: "status", value: "正常", class: "label label-success" };
-                }
-                
-                return result; // 这里对bootstrap-table-editable.min.js做了一些修改，让其能接收class
-            },
-            // 可以按列分开做保存，也可以用后面的onEditableSave
-            url: '/system/sectorList',
-            ajaxOptions: {
-                type: 'get',
-            }, // 默认是post方式提交,这里因为跨域,改成get
-            success: function(response, newValue) {
-                if (response.code == '200') {
-                    // 这里的状态显示有自定义样式区分，做单元格更新
-                    $('#tb_departments').bootstrapTable('updateCellById', {id: response.id, field: 'status', value: newValue});
-                } else {
-                    return response.msg;
-                }
-            },
-            highlight: false
-        }
     }, {
         field: 'operate',
         title: '操作',
@@ -245,8 +210,16 @@ $(document).ready(function(){
   });
 });
 
+//查询部门
+$(document).ready(function(){
+  $("#btn_query").click(function(){
+    //获取模态框数据
+         $('#tb_departments').bootstrapTable("refresh");
+
+
+  });
+});
+
 </script>
-
-
 </body>
 </html>

@@ -30,9 +30,14 @@ def sector_list_query():
 
     return_dict= {'total': 0, 'rows': False}
     # 对参数进行操作
-    result = db_sector_list().show_sector_list()
+    page = int(request.args.get('page'))
+    limit = int(request.args.get('limit'))
+    sortOrder = str(request.args.get('sortOrder'))
+    sectorName = str(request.args.get('sector_name'))
+
+    result, total = db_sector_list().show_sector_list(page,limit,sortOrder,sectorName)
     len(result)
-    return_dict['total'] = len(result)
+    return_dict['total'] = total
     return_dict['rows'] = result
     print(return_dict)
 

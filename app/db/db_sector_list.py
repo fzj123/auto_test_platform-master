@@ -10,14 +10,26 @@ from app.models.mysql_tools import MsqlTools
 
 class db_sector_list:
 
-    def show_sector_list(self):
+    def show_sector_list(self,page,limit,sortOrder,sectorName):
         """
         查询t_user表所有数据
         """
         results = []
         dbUtil = MsqlTools()
-        sql = 'select * from t_sector;'
-        sectors = MsqlTools.get_all(dbUtil, sql)
+        pageNo = (page - 1) * limit
+        if sectorName == '':
+            sql = string.Template('select * from t_sector order by create_time $sortOrder limit $pageNo,$limit;')
+            sql = sql.substitute(pageNo=pageNo, limit=limit, sortOrder=sortOrder)
+            sectors = MsqlTools.get_all(dbUtil, sql)
+
+            sql_total = 'select * from t_sector;'
+            sectors_list = MsqlTools.get_all(dbUtil, sql_total)
+            total = len(sectors_list)
+        else:
+            sql = string.Template('select * from t_sector WHERE sector_name like "%$sectorName%" order by create_time $sortOrder limit $pageNo,$limit;')
+            sql = sql.substitute(sectorName=sectorName, pageNo=pageNo, limit=limit, sortOrder=sortOrder)
+            sectors = MsqlTools.get_all(dbUtil, sql)
+            total = len(sectors)
         for i in range(len(sectors)):
             result = {}
             result['id'] = sectors[i][0]
@@ -28,7 +40,7 @@ class db_sector_list:
 
             results.append(result)
 
-        return results
+        return results, total
 
     def add_sector(self,sector_name,describes):
         """
@@ -44,10 +56,25 @@ class db_sector_list:
         str = MsqlTools.save(dbUtil, sql)
         return str
 
+    def sector_name(self):
+        """
+        获取部门名称列表
+        :return:
+        """
+        dbUtil = MsqlTools()
+
+        sql = 'select sector_name from t_sector order by create_time asc;'
+        sector_name = MsqlTools.get_all(dbUtil, sql)
+        result = []
+        for i in sector_name:
+            result.append(i[0])
+        return result
+
+
 
 if __name__ == '__main__':
 
     s = db_sector_list()
-    a = s.add_sector('测试部门','测试部门')
+    a = s.sector_name()
     print(a)
 

@@ -10,14 +10,25 @@ from app.models.mysql_tools import MsqlTools
 
 class db_user_list:
 
-    def show_user_list(self):
+    def show_user_list(self,page,limit,sortOrder,loginName):
         """
         查询t_user表所有数据
         """
         results = []
         dbUtil = MsqlTools()
-        sql = 'select * from t_user;'
-        users = MsqlTools.get_all(dbUtil, sql)
+        pageNo = (page - 1) * limit
+        if loginName == '':
+            sql = string.Template('select * from t_user order by create_time $sortOrder limit $pageNo,$limit;')
+            sql = sql.substitute(pageNo=pageNo, limit=limit, sortOrder=sortOrder)
+            users = MsqlTools.get_all(dbUtil, sql)
+            sql_total = 'select * from t_user;'
+            user_list = MsqlTools.get_all(dbUtil, sql_total)
+            total = len(user_list)
+        else:
+            sql = string.Template('select * from t_user WHERE user_name like "%$loginName%" order by create_time $sortOrder limit $pageNo,$limit;')
+            sql = sql.substitute(loginName=loginName, pageNo=pageNo, limit=limit, sortOrder=sortOrder)
+            users = MsqlTools.get_all(dbUtil, sql)
+            total = len(users)
         for i in range(len(users)):
             result = {}
             result['id'] = users[i][0]
@@ -32,7 +43,8 @@ class db_user_list:
 
             results.append(result)
 
-        return results
+
+        return results, total
 
     def add_user(self,login_name,password,user_name,department,phone,email,status):
         """
@@ -48,6 +60,20 @@ class db_user_list:
                              phone=phone, email=email, create_time=now_time, last_time=now_time, status=status)
         str = MsqlTools.save(dbUtil, sql)
         return str
+
+    def sector_name(self):
+        """
+        获取部门名称列表
+        :return:
+        """
+        dbUtil = MsqlTools()
+
+        sql = 'select sector_name from t_sector order by create_time asc;'
+        sector_name = MsqlTools.get_all(dbUtil, sql)
+        result = []
+        for i in sector_name:
+            result.append(i[0])
+        return result
 
 
 if __name__ == '__main__':

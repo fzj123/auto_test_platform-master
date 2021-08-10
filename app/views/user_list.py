@@ -30,9 +30,14 @@ def user_list_query():
 
     return_dict= {'total': 0, 'rows': False}
     # 对参数进行操作
-    result = db_user_list().show_user_list()
-    len(result)
-    return_dict['total'] = len(result)
+    page = int(request.args.get('page'))
+    limit = int(request.args.get('limit'))
+    sortOrder = str(request.args.get('sortOrder'))
+    user_name = str(request.args.get('user_name'))
+
+    result,total = db_user_list().show_user_list(page,limit,sortOrder,user_name)
+
+    return_dict['total'] = total
     return_dict['rows'] = result
     print(return_dict)
 
@@ -60,7 +65,14 @@ def add_user():
     return result
 
 
+@mod.route('/system/sectorNameList', methods=['POST'])
+def sector_list():
+    print(request.headers)
+    result = db_user_list().sector_name()
+    return_dict = {'rows': False}
+    return_dict['rows'] = result
 
+    return json.dumps(return_dict, ensure_ascii=False)
 
 
 

@@ -26,7 +26,7 @@
           <form class="form-inline" action="forms_elements.html" method="post" onsubmit="return false;">
             <div class="form-group">
               <div class="col-md-7">
-                <input class="form-control" type="text" id="loginName" name="loginName" placeholder="请输入用户名称..">
+                <input class="form-control" type="text" id="userName" name="userName" placeholder="请输入用户名称..">
               </div>
             </div>
             <div class="form-group">
@@ -73,8 +73,9 @@
                       <input type="text" class="form-control" id="user_name">
                     </div>
                     <div class="form-group">
-                      <label for="department" class="control-label">部门：</label>
-                      <input type="text" class="form-control" id="department">
+                      <label for="department-select" class="control-label">部门：</label>
+                        <select class="form-control" id="department-select" name="department-select" size="1">
+                        </select>
                     </div>
                     <div class="form-group">
                       <label for="phone" class="control-label">手机号：</label>
@@ -126,10 +127,11 @@ $('#tb_departments').bootstrapTable({
     queryParams: function(params) {
         var temp = {
             limit: params.limit,         // 每页数据量
-            offset: params.offset,       // sql语句起始索引
+            //offset: params.offset,       // sql语句起始索引
             page: (params.offset / params.limit) + 1,
             sort: params.sort,           // 排序的列名
-            sortOrder: params.order      // 排序方式'asc' 'desc'
+            sortOrder: 'desc',      // 排序方式'asc' 'desc',params.order
+            user_name:$("#userName").val()
         };
         return temp;
     },                                   // 传递参数
@@ -138,7 +140,7 @@ $('#tb_departments').bootstrapTable({
     pageSize: 10,                        // 每页的记录行数
     pageList: [10, 25, 50, 100],         // 可供选择的每页的行数
     //search: true,                      // 是否显示表格搜索，此搜索是客户端搜索
-    
+
     //showExport: true,        // 是否显示导出按钮, 导出功能需要导出插件支持(tableexport.min.js)
     //exportDataType: "basic", // 导出数据类型, 'basic':当前页, 'all':所有数据, 'selected':选中的数据
   
@@ -259,13 +261,16 @@ function showUser()
     alert('查看详细');
 }
 
+//添加用户
 $(document).ready(function(){
   $("#btn_submit").click(function(){
-    //获取模态框数据
+        //获取模态框数据
+        var options=$("#department-select option:selected");
+
         var login_name = $('#login_name').val();
         var password = $('#password').val();
         var user_name = $('#user_name').val();
-        var department = $('#department').val();
+        var department = options.text();
         var phone = $('#phone').val();
         var email = $('#email').val();
         $.ajax({
@@ -281,8 +286,45 @@ $(document).ready(function(){
   });
 });
 
+//查询用户
+$(document).ready(function(){
+  $("#btn_query").click(function(){
+      //获取模态框数据
+      $('#tb_departments').bootstrapTable("refresh");
+
+
+  });
+});
+
+
+//查询部门
+$(document).ready(function(){
+  //$("#department-select").remove();//清空select列表数据
+　　var state = 1;
+　　$.ajax({
+　　　　type : "POST",
+　　　　url : "/system/sectorNameList",
+　　　　dataType : "JSON",
+　　　　data : {},
+　　success : function(msg)
+　　{
+
+　　　　$("#department-select").prepend("<option value='0'>请选择</option>");//添加第一个option值
+　　　　for (var i = 0; i < msg.rows.length; i++) {
+
+　　　　//如果在select中传递其他参数，可以在option 的value属性中添加参数
+　　　　$("#department-select").append("<option value='"+i+"'>"+msg.rows[i]+"</option>");
+
+　　　　//$("#department-select").append("<option>"+msg.rows[i]+"</option>");
+　　}
+
+　　},error:function(){
+　　alertLayer("获取数据失败","error");
+　　}
+　　});
+});
+
+
 </script>
-
-
 </body>
 </html>
