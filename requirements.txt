@@ -2,3 +2,4 @@ Flask
 bootstrap-flask
 qtawesome
 pymysql
+logzero

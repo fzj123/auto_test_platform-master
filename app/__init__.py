@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_bootstrap import Bootstrap
-from app.views import index, login, main, user_list, sector_list
+from app.views import index, login, main
+from app.views.system import sector_list, user_list
 
 app = Flask(__name__)
 app.config.from_object('config')

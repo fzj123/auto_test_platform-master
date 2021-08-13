@@ -56,7 +56,7 @@ def add_sector():
     #数据库添加部门
     db_sector_list().add_sector(sector_name,describes)
 
-    result = jsonify({'code':200,'msg': '添加用户成功'})
+    result = jsonify({'code':200,'msg': '添加部门成功'})
     return result
 
 

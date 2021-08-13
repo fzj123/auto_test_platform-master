@@ -75,10 +75,28 @@ class db_user_list:
             result.append(i[0])
         return result
 
+    def check_login(self,username,password):
+        """
+        登录校验密码
+        :return:
+        """
+        dbUtil = MsqlTools()
+        sql = string.Template(
+            'SELECT id,login_name FROM t_user WHERE login_name = "$username" AND password = "$password";')
+        sql = sql.substitute(username=username,password=password)
+        list = MsqlTools.get_all(dbUtil, sql)
+        results = []
+        for i in range(len(list)):
+            result = {}
+            result['id'] = list[i][0]
+            result['username'] = list[i][1]
+            results.append(result)
+        return results
+
 
 if __name__ == '__main__':
 
     s = db_user_list()
-    a = s.add_user('test05','123456','测试用户03','测试部门','13123223','1585813232@qq.com','1')
+    a = s.check_login('test05','123456')
     print(a)
 

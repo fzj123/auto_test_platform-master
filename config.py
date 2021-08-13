@@ -1,3 +1,5 @@
+SECRET_KEY = 'you-will-never-guess'
+
 mysql_config = {
     "host": "localhost",
     "port": 3306,
@@ -6,3 +8,13 @@ mysql_config = {
     "dbName": "test_auto",
     "charsets": "UTF8"
 }
+
+
+# 目录相关配置
+import os
+currentPath = os.path.dirname(os.path.abspath(__file__))
+logPath = os.path.join(currentPath,'logs')
+
+
+
+
