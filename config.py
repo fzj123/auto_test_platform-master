@@ -1,5 +1,6 @@
 SECRET_KEY = 'you-will-never-guess'
 
+#数据库配置
 mysql_config = {
     "host": "localhost",
     "port": 3306,
