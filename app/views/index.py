@@ -13,4 +13,5 @@ mod = Blueprint('index', __name__,
 def index():
     list = session.get('user', None)
     username = list[0]["username"]
+    print('登录名称：{0}'.format(username))
     return render_template("index.html", message='Hello, %s' % username)

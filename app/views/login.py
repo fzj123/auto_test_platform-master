@@ -17,10 +17,10 @@ def authorize(fn):
     def wrapper():
         user = session.get('user', None)
         if user:
-            log.info ("已登录")
+            log.info("已登录")
             return fn()
         else:
-            log.info ("未登录")
+            log.info("未登录")
             return render_template("login.html")
     return wrapper
 
@@ -50,7 +50,7 @@ def checklogin():
         else:
             result = jsonify({'msg': '用户名或密码错误'})
 
-    return result, {'Content-Type': 'application/json'}
+    return result
 
 
 

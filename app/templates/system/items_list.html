@@ -23,12 +23,12 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="card">
-        <div class="card-header"><h4>部门管理</h4></div>
+        <div class="card-header"><h4>项目管理</h4></div>
         <div class="card-body">
           <form class="form-inline" action="forms_elements.html" method="post" onsubmit="return false;">
             <div class="form-group">
               <div class="col-md-7">
-                <input class="form-control" type="text" id="sectorName" name="sectorName" placeholder="请输入部门名称..">
+                <input class="form-control" type="text" id="itemsName" name="itemsName" placeholder="请输入项目名称..">
               </div>
             </div>
             <div class="form-group">
@@ -58,13 +58,13 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="addModalLabel">新增部门</h4>
+                  <h4 class="modal-title" id="addModalLabel">添加项目</h4>
                 </div>
                 <div class="modal-body">
                   <form>
                     <div class="form-group">
-                      <label for="sector_name" class="control-label">部门名称：</label>
-                      <input type="text" class="form-control" id="sector_name">
+                      <label for="items_name" class="control-label">项目名称：</label>
+                      <input type="text" class="form-control" id="items_name">
                     </div>
                     <div class="form-group">
                       <label for="describes" class="control-label">描述内容：</label>
@@ -80,24 +80,22 @@
             </div>
 </div>
 
-
-
 <div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="showModalLabel">显示部门</h4>
+                  <h4 class="modal-title" id="showModalLabel">显示项目</h4>
                 </div>
                 <div class="modal-body">
                   <form>
                     <div class="form-group">
-                      <label for="show_sector_name" class="control-label">部门名称：</label>
-                      <input type="text" class="form-control" id="show_sector_name">
+                      <label for="show_items_name" class="control-label">项目名称：</label>
+                      <input type="text" class="form-control" id="show_items_name">
                     </div>
                     <div class="form-group">
-                      <label for="show_member" class="control-label">成员数：</label>
-                      <input type="text" class="form-control" id="show_member">
+                      <label for="show_create_user" class="control-label">创建用户：</label>
+                      <input type="text" class="form-control" id="show_create_user">
                     </div>
                     <div class="form-group">
                       <label for="show_create_time" class="control-label">创建时间：</label>
@@ -116,23 +114,22 @@
             </div>
 </div>
 
-
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="editModalLabel">编辑部门</h4>
+                  <h4 class="modal-title" id="editModalLabel">编辑项目</h4>
                 </div>
                 <div class="modal-body">
                   <form>
                     <div class="form-group">
-                      <label for="edit_sector_id" class="control-label">部门id：</label>
-                      <input type="text" class="form-control" id="edit_sector_id">
+                      <label for="edit_items_id" class="control-label">项目id：</label>
+                      <input type="text" class="form-control" id="edit_items_id">
                     </div>
                     <div class="form-group">
-                      <label for="edit_sector_name" class="control-label">部门名称：</label>
-                      <input type="text" class="form-control" id="edit_sector_name">
+                      <label for="edit_items_name" class="control-label">项目名称：</label>
+                      <input type="text" class="form-control" id="edit_items_name">
                     </div>
                     <div class="form-group">
                       <label for="edit_describes" class="control-label">描述内容：</label>
@@ -147,6 +144,7 @@
               </div>
             </div>
 </div>
+
 
 <script type="text/javascript" src="../../static/js/jquery.min.js"></script>
 <script type="text/javascript" src="../../static/js/bootstrap.min.js"></script>
@@ -167,7 +165,7 @@
 <script type="text/javascript">
 $('#tb_departments').bootstrapTable({
     classes: 'table table-bordered table-hover table-striped',
-    url: '/system/sectorList',
+    url: '/system/itemsList',
     method: 'get',
     uniqueId: 'id',
     idField: 'id',             // 每行的唯一标识字段
@@ -187,7 +185,7 @@ $('#tb_departments').bootstrapTable({
             page: (params.offset / params.limit) + 1,
             sort: params.sort,           // 排序的列名
             sortOrder: 'desc',      // 排序方式'asc' 'desc'
-            sector_name:$("#sectorName").val()
+            items_name:$("#itemsName").val()
         };
         return temp;
     },                                   // 传递参数
@@ -204,14 +202,14 @@ $('#tb_departments').bootstrapTable({
         checkbox: true    // 是否显示复选框
     }, {
         field: 'id',
-        title: '部门ID',
+        title: '项目ID',
         sortable: true    // 是否排序
     }, {
-        field: 'sector_name',
-        title: '部门名称'
+        field: 'items_name',
+        title: '项目名称'
     }, {
-        field: 'member',
-        title: '成员数',
+        field: 'create_user',
+        title: '创建人',
     }, {
         field: 'create_time',
         title: '创建时间'
@@ -253,15 +251,15 @@ function btnGroup ()
 function editUser(row)
 {
     var data = row;
-    $("#edit_sector_id").val(data.id);
-    $("#edit_sector_name").val(data.sector_name);
+    $("#edit_items_id").val(data.id);
+    $("#edit_items_name").val(data.items_name);
     $("#edit_describes").val(data.describes);
     $('#editModal').modal('show')
 }
 // 操作方法 - 删除
 function delUser(id)
 {
-    var sectorId = id
+    var itemsId = id
     $.alert({
         title: '是否删除',
         content: '确定删除此行数据吗？',
@@ -271,8 +269,8 @@ function delUser(id)
 				btnClass: 'btn-primary',
 				action: function(){
                     $.ajax({
-                      url: '/system/deleteSector',
-                      data:{"sectorId":sectorId},
+                      url: '/system/deleteItems',
+                      data:{"itemsId":itemsId},
                       type: "get",
                       dataType:"json",
                       success: function () {
@@ -296,8 +294,8 @@ function delUser(id)
 function showUser(row)
 {
     var data = row;
-    $("#show_sector_name").val(data.sector_name);
-    $("#show_member").val(data.member);
+    $("#show_items_name").val(data.items_name);
+    $("#show_create_user").val(data.create_user);
     $("#show_create_time").val(data.create_time);
     $("#show_describes").val(data.describes);
     $('#showModal').modal('show')
@@ -306,13 +304,13 @@ function showUser(row)
 $(document).ready(function(){
   $("#btn_submit").click(function(){
     //获取模态框数据
-        var sector_name = $('#sector_name').val();
+        var items_name = $('#items_name').val();
         var describes = $('#describes').val();
         $.ajax({
-            url: '/system/addSector',
+            url: '/system/addItems',
             type: 'post',
             contentType: 'application/json',
-            data: JSON.stringify({"sector_name": sector_name, "describes": describes}),
+            data: JSON.stringify({"items_name": items_name, "describes": describes}),
             success: function () {
                  $('#addeModal').modal('hide');
                  $("#tb_departments").bootstrapTable('refresh');
@@ -326,14 +324,14 @@ $(document).ready(function(){
 $(document).ready(function(){
   $("#btn_edit").click(function(){
         //获取模态框数据
-        var edit_sector_id = $('#edit_sector_id').val();
-        var edit_sector_name = $('#edit_sector_name').val();
+        var edit_items_id = $('#edit_items_id').val();
+        var edit_items_name = $('#edit_items_name').val();
         var edit_describes = $('#edit_describes').val();
         $.ajax({
-            url: '/system/editSector',
+            url: '/system/editItems',
             type: 'post',
             contentType: 'application/json',
-            data: JSON.stringify({"id": edit_sector_id, "sector_name": edit_sector_name, "describes": edit_describes}),
+            data: JSON.stringify({"id": edit_items_id, "items_name": edit_items_name, "describes": edit_describes}),
             success: function () {
               $('#editModal').modal('hide');
               $("#tb_departments").bootstrapTable('refresh');
@@ -342,7 +340,6 @@ $(document).ready(function(){
         });
   });
 });
-
 
 //查询部门
 $(document).ready(function(){

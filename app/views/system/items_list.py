@@ -4,11 +4,11 @@
 import datetime
 import json
 
-from flask import Blueprint, render_template, request, jsonify
-from app.db.db_sector_list import db_sector_list
+from flask import Blueprint, render_template, request, jsonify, session
+from app.db.db_items_list import db_items_list
 from app.models.log import Logzero
 
-mod = Blueprint('sector_list', __name__,
+mod = Blueprint('items_list', __name__,
                         template_folder='templates')
 
 
@@ -24,21 +24,21 @@ class DateEncoder(json.JSONEncoder):
 log = Logzero()
 
 #部门管理页面
-@mod.route('/system/sector_list.html')
-def sector_list():
-    return render_template("system/sector_list.html")
+@mod.route('/system/items_list.html')
+def items_list():
+    return render_template("system/items_list.html")
 
-@mod.route('/system/sectorList', methods=['GET'])
-def sector_list_query():
+@mod.route('/system/itemsList', methods=['GET'])
+def items_list_query():
 
     return_dict= {'total': 0, 'rows': False}
     # 对参数进行操作
     page = int(request.args.get('page'))
     limit = int(request.args.get('limit'))
     sortOrder = str(request.args.get('sortOrder'))
-    sectorName = str(request.args.get('sector_name'))
+    itemsName = str(request.args.get('items_name'))
 
-    result, total = db_sector_list().show_sector_list(page,limit,sortOrder,sectorName)
+    result, total = db_items_list().show_items_list(page,limit,sortOrder,itemsName)
     len(result)
     return_dict['total'] = total
     return_dict['rows'] = result
@@ -46,19 +46,22 @@ def sector_list_query():
 
     return json.dumps(return_dict, ensure_ascii=False, cls=DateEncoder)
 
-#添加部门
-@mod.route('/system/addSector', methods=['POST'])
-def add_sector():
+@mod.route('/system/addItems', methods=['POST'])
+def add_items():
     log.info('请求头：{0}'.format(request.headers))
     data = request.get_json()
     log.info('返回结果：{0}'.format(data))
-    sector_name = data['sector_name']
+    items_name = data['items_name']
     describes = data['describes']
 
-    log.info('sector_name：{0},describes：{1}'.format(sector_name, describes))
+    list = session.get('user', None)
+    username = list[0]["username"]
+    print('登录名称：{0}'.format(username))
+
+    log.info('sector_name：{0},describes：{1}'.format(items_name, describes))
 
     #数据库添加部门
-    result = db_sector_list().add_sector(sector_name,describes)
+    result = db_items_list().add_items(items_name,username,describes)
 
     if result == 1:
         code = 200
@@ -69,20 +72,20 @@ def add_sector():
     result = jsonify({'code': code, 'msg': message})
     return result
 
-#编辑部门
-@mod.route('/system/editSector', methods=['POST'])
-def edit_sector():
+#编辑项目
+@mod.route('/system/editItems', methods=['POST'])
+def edit_items():
     log.info('请求头：{0}'.format(request.headers))
     data = request.get_json()
     log.info('返回结果：{0}'.format(data))
     id = data['id']
-    sector_name = data['sector_name']
+    items_name = data['items_name']
     describes = data['describes']
 
-    log.info('id：{0},sector_name：{1},sector_name：{2}'.format(id,sector_name,describes))
+    log.info('id：{0},sector_name：{1},items_name：{2}'.format(id,items_name,describes))
 
-    #数据库更新部门
-    result = db_sector_list().edit_sector(id,sector_name,describes)
+    #数据库更新项目
+    result = db_items_list().edit_items(id,items_name,describes)
 
     if result == 1:
         code = 200
@@ -93,13 +96,14 @@ def edit_sector():
     result = jsonify({'code': code, 'msg': message})
     return result
 
-#用户id删除部门
-@mod.route('/system/deleteSector', methods=['GET'])
-def delete_sector():
+
+#用户id删除项目
+@mod.route('/system/deleteItems', methods=['GET'])
+def delete_items():
 
     # 对参数进行操作
-    sectorid = int(request.args.get('sectorId'))
-    result = db_sector_list().delete_sector(sectorid)
+    itemsId = int(request.args.get('itemsId'))
+    result = db_items_list().delete_items(itemsId)
 
     if result == 1:
         code = 200
@@ -110,9 +114,4 @@ def delete_sector():
     result = jsonify({'code': code, 'msg': message})
 
     return result
-
-
-
-
-
 

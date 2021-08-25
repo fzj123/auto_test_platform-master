@@ -4,7 +4,10 @@
 import pymysql
 import json
 import config
+from app.models.log import Logzero
 
+
+log = Logzero()
 
 class MsqlTools:
     """mysql util"""
@@ -18,7 +21,7 @@ class MsqlTools:
         self.password = config.mysql_config['password']
         self.dbName = config.mysql_config['dbName']
         self.charsets = config.mysql_config['charsets']
-        print("配置文件：" + json.dumps(config.mysql_config))
+        log.info("配置文件：" + json.dumps(config.mysql_config))
 
     # 链接数据库
     def get_con(self):
@@ -47,7 +50,7 @@ class MsqlTools:
             res = self.cursor.fetchone()
             self.close()
         except Exception as e:
-            print("查询失败！" + str(e))
+            log.info("查询失败！" + str(e))
         return res
 
     # 查询列表数据
@@ -59,7 +62,7 @@ class MsqlTools:
             res = self.cursor.fetchall()
             self.close()
         except Exception as e:
-            print("查询失败！" + str(e))
+            log.info("查询失败！" + str(e))
         return res
 
     # 插入数据
@@ -71,7 +74,7 @@ class MsqlTools:
             self.db.commit()
             self.close()
         except Exception as e:
-            print("操作失败！" + str(e))
+            log.info("操作失败！" + str(e))
             self.db.rollback()
         return count
 

@@ -58,8 +58,37 @@ class db_user_list:
             'insert into t_user (login_name,password,user_name,department,phone,email,create_time,last_time,status) values ("$login_name","$password","$user_name","$department","$phone","$email","$create_time","$last_time","$status");')
         sql = sql.substitute(login_name=login_name, password=password, user_name=user_name, department=department,
                              phone=phone, email=email, create_time=now_time, last_time=now_time, status=status)
-        str = MsqlTools.save(dbUtil, sql)
-        return str
+        result = MsqlTools.save(dbUtil, sql)
+        return result
+
+    def edit_user(self,id,login_name,user_name,department,phone,email):
+        """
+        编辑用户
+        :return:
+        """
+
+        dbUtil = MsqlTools()
+        sql = string.Template(
+            'update t_user set login_name= "$login_name", user_name="$user_name", department="$department", phone="$phone", email="$email" where id ="$id";')
+        sql = sql.substitute(id=id, login_name=login_name, user_name=user_name, department=department,
+                             phone=phone, email=email)
+        result = MsqlTools.update(dbUtil, sql)
+        return result
+
+
+    def delete_user(self,userid):
+        """
+        删除用户
+        :return:
+        """
+        dbUtil = MsqlTools()
+        sql = string.Template(
+            'DELETE FROM t_user WHERE id ="$userid";')
+        sql = sql.substitute(userid=userid)
+        result = MsqlTools.delete(dbUtil, sql)
+
+        return  result
+
 
     def sector_name(self):
         """
@@ -74,6 +103,8 @@ class db_user_list:
         for i in sector_name:
             result.append(i[0])
         return result
+
+
 
     def check_login(self,username,password):
         """
@@ -97,6 +128,6 @@ class db_user_list:
 if __name__ == '__main__':
 
     s = db_user_list()
-    a = s.check_login('test05','123456')
+    a = s.edit_user('42','test','','','','')
     print(a)
 

@@ -44,7 +44,7 @@ class db_sector_list:
 
     def add_sector(self,sector_name,describes):
         """
-        添加用户
+        添加部门
         :return:
         """
         now_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -55,6 +55,34 @@ class db_sector_list:
         sql = sql.substitute(sector_name=sector_name, member=0, create_time=now_time, describes=describes)
         str = MsqlTools.save(dbUtil, sql)
         return str
+
+
+    def edit_sector(self,id,sector_name,describes):
+        """
+        编辑用户
+        :return:
+        """
+
+        dbUtil = MsqlTools()
+        sql = string.Template(
+            'update t_sector set sector_name= "$sector_name", describes="$describes" where id ="$id";')
+        sql = sql.substitute(id=id, sector_name=sector_name, describes=describes)
+        result = MsqlTools.update(dbUtil, sql)
+        return result
+
+    def delete_sector(self,sectorid):
+        """
+        删除部门
+        :return:
+        """
+        dbUtil = MsqlTools()
+        sql = string.Template(
+            'DELETE FROM t_sector WHERE id ="$sectorid";')
+        sql = sql.substitute(sectorid=sectorid)
+        result = MsqlTools.delete(dbUtil, sql)
+
+        return  result
+
 
     def sector_name(self):
         """
@@ -75,6 +103,6 @@ class db_sector_list:
 if __name__ == '__main__':
 
     s = db_sector_list()
-    a = s.sector_name()
+    a = s.edit_sector('16','123','123')
     print(a)
 
