@@ -23,7 +23,7 @@ class DateEncoder(json.JSONEncoder):
 
 log = Logzero()
 
-#部门管理页面
+#项目管理页面
 @mod.route('/system/items_list.html')
 def items_list():
     return render_template("system/items_list.html")
