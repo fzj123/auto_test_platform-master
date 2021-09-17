@@ -4,11 +4,11 @@
 import datetime
 import json
 
-from flask import Blueprint, render_template, request, jsonify
-from app.db.db_sector_list import db_sector_list
+from flask import Blueprint, render_template, request, jsonify, session
+from app.db.db_variables_list import db_variables_list
 from app.models.log import Logzero
 
-mod = Blueprint('sector_list', __name__,
+mod = Blueprint('variables_list', __name__,
                         template_folder='templates')
 
 
@@ -23,22 +23,22 @@ class DateEncoder(json.JSONEncoder):
 
 log = Logzero()
 
-#部门管理页面
-@mod.route('/system/sector_list.html')
-def sector_list():
-    return render_template("system/sector_list.html")
+#参数管理页面
+@mod.route('/interface/variables_list.html')
+def variables_list():
+    return render_template("interface/variables_list.html")
 
-@mod.route('/system/sectorList', methods=['GET'])
-def sector_list_query():
+@mod.route('/interface/variablesList', methods=['GET'])
+def variables_list_query():
 
     return_dict= {'total': 0, 'rows': False}
     # 对参数进行操作
     page = int(request.args.get('page'))
     limit = int(request.args.get('limit'))
     sortOrder = str(request.args.get('sortOrder'))
-    sectorName = str(request.args.get('sector_name'))
+    variablesListName = str(request.args.get('variablesList_name'))
 
-    result, total = db_sector_list().show_sector_list(page,limit,sortOrder,sectorName)
+    result, total = db_variables_list().show_variables_list(page,limit,sortOrder,variablesListName)
     len(result)
     return_dict['total'] = total
     return_dict['rows'] = result
@@ -46,19 +46,18 @@ def sector_list_query():
 
     return json.dumps(return_dict, ensure_ascii=False, cls=DateEncoder)
 
-#添加部门
-@mod.route('/system/addSector', methods=['POST'])
-def add_sector():
+@mod.route('/interface/addvariables', methods=['POST'])
+def add_variables():
     log.info('请求头：{0}'.format(request.headers))
     data = request.get_json()
     log.info('请求参数：{0}'.format(data))
-    sector_name = data['sector_name']
+    variables_name = data['variables_name']
+    variables_value = data['variables_value']
+    items_name = data['items_name']
     describes = data['describes']
 
-    log.info('sector_name：{0},describes：{1}'.format(sector_name, describes))
-
-    #数据库添加部门
-    result = db_sector_list().add_sector(sector_name,describes)
+    #数据库添公共参数
+    result = db_variables_list().add_variables(variables_name,variables_value,items_name,describes)
 
     if result == 1:
         code = 200
@@ -69,20 +68,21 @@ def add_sector():
     result = jsonify({'code': code, 'msg': message})
     return result
 
-#编辑部门
-@mod.route('/system/editSector', methods=['POST'])
-def edit_sector():
+#编辑项目
+@mod.route('/interface/editvariables', methods=['POST'])
+def edit_items():
     log.info('请求头：{0}'.format(request.headers))
     data = request.get_json()
     log.info('返回结果：{0}'.format(data))
     id = data['id']
-    sector_name = data['sector_name']
+    variables_name = data['variables_name']
+    variables_value = data['variables_value']
+    items_name = data['items_name']
     describes = data['describes']
 
-    log.info('id：{0},sector_name：{1},sector_name：{2}'.format(id,sector_name,describes))
 
-    #数据库更新部门
-    result = db_sector_list().edit_sector(id,sector_name,describes)
+    #数据库更新项目
+    result = db_variables_list().edit_variables(id,variables_name,variables_value,items_name,describes)
 
     if result == 1:
         code = 200
@@ -93,13 +93,16 @@ def edit_sector():
     result = jsonify({'code': code, 'msg': message})
     return result
 
-#根据id删除部门
-@mod.route('/system/deleteSector', methods=['GET'])
-def delete_sector():
+
+#根据id删除公共参数
+@mod.route('/interface/deletevariables', methods=['GET'])
+def delete_items():
 
     # 对参数进行操作
-    sectorid = request.args.get('sectorId')
-    result = db_sector_list().delete_sector(sectorid)
+    variablesId = request.args.get('variablesId')
+
+
+    result = db_variables_list().delete_variables(variablesId)
 
     if result == 1:
         code = 200
@@ -110,17 +113,4 @@ def delete_sector():
     result = jsonify({'code': code, 'msg': message})
 
     return result
-
-#查询所有部门
-@mod.route('/system/sectorNameList', methods=['POST'])
-def sector_lists():
-    log.info('请求头：{0}'.format(request.headers))
-    result = db_sector_list().sector_name()
-    return_dict = {'rows': False}
-    return_dict['rows'] = result
-
-    return json.dumps(return_dict, ensure_ascii=False)
-
-
-
 

@@ -3,6 +3,7 @@
 
 import string
 import time
+import uuid
 
 from app.models.mysql_tools import MsqlTools
 
@@ -52,11 +53,12 @@ class db_user_list:
         :return:
         """
         now_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        id = uuid.uuid4()
 
         dbUtil = MsqlTools()
         sql = string.Template(
-            'insert into t_user (login_name,password,user_name,department,phone,email,create_time,last_time,status) values ("$login_name","$password","$user_name","$department","$phone","$email","$create_time","$last_time","$status");')
-        sql = sql.substitute(login_name=login_name, password=password, user_name=user_name, department=department,
+            'insert into t_user (id,login_name,password,user_name,department,phone,email,create_time,last_time,status) values ("$id","$login_name","$password","$user_name","$department","$phone","$email","$create_time","$last_time","$status");')
+        sql = sql.substitute(id=id, login_name=login_name, password=password, user_name=user_name, department=department,
                              phone=phone, email=email, create_time=now_time, last_time=now_time, status=status)
         result = MsqlTools.save(dbUtil, sql)
         return result
@@ -90,22 +92,6 @@ class db_user_list:
         return  result
 
 
-    def sector_name(self):
-        """
-        获取部门名称列表
-        :return:
-        """
-        dbUtil = MsqlTools()
-
-        sql = 'select sector_name from t_sector order by create_time asc;'
-        sector_name = MsqlTools.get_all(dbUtil, sql)
-        result = []
-        for i in sector_name:
-            result.append(i[0])
-        return result
-
-
-
     def check_login(self,username,password):
         """
         登录校验密码
@@ -124,10 +110,23 @@ class db_user_list:
             results.append(result)
         return results
 
+    def user_name(self):
+        """
+        获取用户名称
+        :return:
+        """
+        dbUtil = MsqlTools()
+
+        sql = 'select user_name from t_user order by create_time asc;'
+        sector_name = MsqlTools.get_all(dbUtil, sql)
+        result = []
+        for i in sector_name:
+            result.append(i[0])
+        return result
 
 if __name__ == '__main__':
 
     s = db_user_list()
-    a = s.edit_user('42','test','','','','')
+    a = s.user_name()
     print(a)
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>部门管理</title>
+<title>公共参数</title>
 <link rel="icon" href="favicon.ico" type="../static/image/ico">
 <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
 <link href="../../static/css/materialdesignicons.min.css" rel="stylesheet">
@@ -13,19 +13,19 @@
 <!--对话框-->
 <link rel="stylesheet" href="../../static/js/jconfirm/jquery-confirm.min.css">
 </head>
-  
+
 <body>
 <div class="container-fluid p-t-15">
-  
+
   <div class="row">
     <div class="col-lg-12">
       <div class="card">
-        <div class="card-header"><h4>部门管理</h4></div>
+        <div class="card-header"><h4>公共参数</h4></div>
         <div class="card-body">
-          <form class="form-inline" action="forms_elements.html" method="post" onsubmit="return false;">
+          <form class="form-inline" action="variables_list.html" method="post" onsubmit="return false;">
             <div class="form-group">
               <div class="col-md-7">
-                <input class="form-control" type="text" id="sectorName" name="sectorName" placeholder="请输入部门名称..">
+                <input class="form-control" type="text" id="variablesName" name="variablesName" placeholder="请输入参数名称..">
               </div>
             </div>
             <div class="form-group">
@@ -41,13 +41,13 @@
           </form>
 
           <table id="tb_departments"></table>
- 
+
         </div>
       </div>
     </div>
-    
+
   </div>
-  
+
 </div>
 
 <div class="modal fade" id="addeModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
@@ -55,13 +55,22 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="addModalLabel">新增部门</h4>
+                  <h4 class="modal-title" id="addModalLabel">添加公共参数</h4>
                 </div>
                 <div class="modal-body">
                   <form>
                     <div class="form-group">
-                      <label for="sector_name" class="control-label">部门名称：</label>
-                      <input type="text" class="form-control" id="sector_name">
+                      <label for="variables_name" class="control-label">参数名称：</label>
+                      <input type="text" class="form-control" id="variables_name">
+                    </div>
+                    <div class="form-group">
+                      <label for="variables_value" class="control-label">参数值：</label>
+                      <input type="text" class="form-control" id="variables_value">
+                    </div>
+                    <div class="form-group">
+                      <label for="items_name-select" class="control-label">项目名称：</label>
+                        <select class="form-control" id="items_name-select" name="items_name-select" size="1">
+                        </select>
                     </div>
                     <div class="form-group">
                       <label for="describes" class="control-label">描述内容：</label>
@@ -77,24 +86,27 @@
             </div>
 </div>
 
-
-
 <div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="showModalLabel">显示部门</h4>
+                  <h4 class="modal-title" id="showModalLabel">显示公共参数</h4>
                 </div>
                 <div class="modal-body">
                   <form>
                     <div class="form-group">
-                      <label for="show_sector_name" class="control-label">部门名称：</label>
-                      <input type="text" class="form-control" id="show_sector_name">
+                      <label for="show_variables_name" class="control-label">参数名称：</label>
+                      <input type="text" class="form-control" id="show_variables_name">
                     </div>
                     <div class="form-group">
-                      <label for="show_member" class="control-label">成员数：</label>
-                      <input type="text" class="form-control" id="show_member">
+                      <label for="show_variables_value" class="control-label">参数值：</label>
+                      <input type="text" class="form-control" id="show_variables_value">
+                    </div>
+                    <div class="form-group">
+                      <label for="show_items_name-select" class="control-label">项目名称：</label>
+                        <select class="form-control" id="show_items_name-select" name="show_items_name-select" size="1">
+                        </select>
                     </div>
                     <div class="form-group">
                       <label for="show_create_time" class="control-label">创建时间：</label>
@@ -114,22 +126,31 @@
 </div>
 
 
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModallLabel">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="editModalLabel">编辑部门</h4>
+                  <h4 class="modal-title" id="editModalLabel">编辑公共参数</h4>
                 </div>
                 <div class="modal-body">
                   <form>
                     <div class="form-group">
-                      <label for="edit_sector_id" class="control-label">部门id：</label>
-                      <input type="text" class="form-control" id="edit_sector_id">
+                      <label for="edit_variables_id" class="control-label">参数id：</label>
+                      <input type="text" class="form-control" id="edit_variables_id">
                     </div>
                     <div class="form-group">
-                      <label for="edit_sector_name" class="control-label">部门名称：</label>
-                      <input type="text" class="form-control" id="edit_sector_name">
+                      <label for="edit_variables_name" class="control-label">参数名称：</label>
+                      <input type="text" class="form-control" id="edit_variables_name">
+                    </div>
+                    <div class="form-group">
+                      <label for="edit_variables_value" class="control-label">参数值：</label>
+                      <input type="text" class="form-control" id="edit_variables_value">
+                    </div>
+                    <div class="form-group">
+                      <label for="edit_items_name-select" class="control-label">项目名称：</label>
+                        <select class="form-control" id="edit_items_name-select" name="edit_items_name-select" size="1">
+                        </select>
                     </div>
                     <div class="form-group">
                       <label for="edit_describes" class="control-label">描述内容：</label>
@@ -144,6 +165,7 @@
               </div>
             </div>
 </div>
+
 
 <script type="text/javascript" src="../../static/js/jquery.min.js"></script>
 <script type="text/javascript" src="../../static/js/bootstrap.min.js"></script>
@@ -164,7 +186,7 @@
 <script type="text/javascript">
 $('#tb_departments').bootstrapTable({
     classes: 'table table-bordered table-hover table-striped',
-    url: '/system/sectorList',
+    url: '/interface/variablesList',
     method: 'get',
     uniqueId: 'id',
     idField: 'id',             // 每行的唯一标识字段
@@ -172,9 +194,9 @@ $('#tb_departments').bootstrapTable({
     //clickToSelect: true,     // 是否启用点击选中行
     showColumns: true,         // 是否显示所有的列
     showRefresh: true,         // 是否显示刷新按钮
-    
+
     //showToggle: true,        // 是否显示详细视图和列表视图的切换按钮(clickToSelect同时设置为true时点击会报错)
-  
+
     pagination: true,                    // 是否显示分页
     sortOrder: "asc",                    // 排序方式
     queryParams: function(params) {
@@ -184,7 +206,7 @@ $('#tb_departments').bootstrapTable({
             page: (params.offset / params.limit) + 1,
             sort: params.sort,           // 排序的列名
             sortOrder: 'desc',      // 排序方式'asc' 'desc'
-            sector_name:$("#sectorName").val()
+            variablesList_name:$("#variablesName").val()
         };
         return temp;
     },                                   // 传递参数
@@ -193,28 +215,31 @@ $('#tb_departments').bootstrapTable({
     pageSize: 10,                        // 每页的记录行数
     pageList: [10, 25, 50, 100],         // 可供选择的每页的行数
     //search: true,                      // 是否显示表格搜索，此搜索是客户端搜索
-    
+
     //showExport: true,        // 是否显示导出按钮, 导出功能需要导出插件支持(tableexport.min.js)
     //exportDataType: "basic", // 导出数据类型, 'basic':当前页, 'all':所有数据, 'selected':选中的数据
-  
+
     columns: [{
         checkbox: true    // 是否显示复选框
-    },  {
+    }, {
         field: '',
         title: '序号',
         formatter: function (value, row, index) {
         return index+1;
         }
     }, {
-        field: 'sector_name',
-        title: '部门名称'
+        field: 'variables_name',
+        title: '参数名称'
     }, {
-        field: 'member',
-        title: '成员数',
-    }, {
+        field: 'variables_value',
+        title: '参数值',
+    },{
+        field: 'items_name',
+        title: '所属项目',
+    },{
         field: 'create_time',
-        title: '创建时间'
-    }, {
+        title: '创建时间',
+    },{
         field: 'describes',
         title: '描述'
     }, {
@@ -223,13 +248,13 @@ $('#tb_departments').bootstrapTable({
         formatter: btnGroup,  // 自定义方法
         events: {
             'click .edit-btn': function (event, value, row, index) {
-                editUser(row);
+                edit(row);
             },
             'click .del-btn': function (event, value, row, index) {
-                delUser(row.id);
+                del(row.id);
             },
             'click .show-btn': function (event, value, row, index) {
-                showUser(row);
+                show(row);
             }
         }
     }],
@@ -249,18 +274,25 @@ function btnGroup ()
 }
 
 // 操作方法 - 编辑
-function editUser(row)
+function edit(row)
 {
-    var data = row;
-    $("#edit_sector_id").val(data.id);
-    $("#edit_sector_name").val(data.sector_name);
+     var data = row;
+    $("#edit_variables_id").val(data.id);
+    $("#edit_variables_name").val(data.variables_name);
+    $("#edit_variables_value").val(data.variables_value);
+    var items_name = data.items_name;
+    $("#edit_items_name-select option").each(function (){
+        if($(this).text()==items_name){
+            $(this).attr('selected',true);
+        }
+    });
     $("#edit_describes").val(data.describes);
     $('#editModal').modal('show')
 }
 // 操作方法 - 删除
-function delUser(id)
+function del(id)
 {
-    var sectorId = id
+    var variablesId = id
     $.alert({
         title: '是否删除',
         content: '确定删除此行数据吗？',
@@ -270,14 +302,22 @@ function delUser(id)
 				btnClass: 'btn-primary',
 				action: function(){
                     $.ajax({
-                      url: '/system/deleteSector',
-                      data:{"sectorId":sectorId},
+                      url: '/interface/deletevariables',
+                      data:{"variablesId":variablesId},
                       type: "get",
                       dataType:"json",
-                      success: function () {
+                      success: function (data) {
                         $("#tb_departments").bootstrapTable('refresh');
-                        lightyear.notify('删除成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
-                      }
+                        if(data.code == 200){
+                          lightyear.notify('删除成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
+                        }else{
+                          lightyear.notify('添加失败！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
+                        }
+                      },
+			          error: function(error) {
+                         lightyear.notify('system error！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
+				         console.log(error);
+			          }
                     });
 
 				}
@@ -292,73 +332,114 @@ function delUser(id)
     });
 }
 // 操作方法 - 查看
-function showUser(row)
+function show(row)
 {
     var data = row;
-    $("#show_sector_name").val(data.sector_name);
-    $("#show_member").val(data.member);
+    $("#show_items_name-select").empty();
+    $("#show_variables_name").val(data.variables_name);
+    $("#show_variables_value").val(data.variables_value);
+    $("#show_items_name-select").prepend("<option value='0'>"+data.items_name+"</option>");
     $("#show_create_time").val(data.create_time);
     $("#show_describes").val(data.describes);
     $('#showModal').modal('show')
 }
 
-$(document).ready(function(){
-  $("#btn_submit").click(function(){
-    //获取模态框数据
-        var sector_name = $('#sector_name').val();
-        var describes = $('#describes').val();
-        $.ajax({
-            url: '/system/addSector',
-            type: 'post',
-            contentType: 'application/json',
-            data: JSON.stringify({"sector_name": sector_name, "describes": describes}),
-            success: function () {
-                 $('#addeModal').modal('hide');
-                 $("#tb_departments").bootstrapTable('refresh');
-                 location.reload(true);
-                 lightyear.notify('添加成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
-            },
-            error: function(error) {
-			  lightyear.notify('system error！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
-			  console.log(error);
-		    }
-        });
-  });
+//添加公共参数
+$(document).ready(function() {
+	$("#btn_submit").click(function() {
+		//获取模态框数据
+		var items_name = $("#items_name-select option:selected");
+
+		var variables_name = $('#variables_name').val();
+		var variables_value = $('#variables_value').val();
+		var items_name = items_name.text();
+		var describes = $('#describes').val();
+		$.ajax({
+			url: '/interface/addvariables',
+			type: 'post',
+			contentType: 'application/json',
+			data: JSON.stringify({
+				"variables_name": variables_name,
+				"variables_value": variables_value,
+				"items_name": items_name,
+				"describes": describes
+			}),
+			success: function() {
+				$('#addeModal').modal('hide');
+				$("#tb_departments").bootstrapTable('refresh');
+				location.reload(true);
+				lightyear.notify('添加成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
+			},
+			error: function(error) {
+				lightyear.notify('system error！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
+				console.log(error);
+			}
+		});
+	});
 });
 
-//编辑部门
+//编辑公共参数
 $(document).ready(function(){
   $("#btn_edit").click(function(){
         //获取模态框数据
-        var edit_sector_id = $('#edit_sector_id').val();
-        var edit_sector_name = $('#edit_sector_name').val();
+        var items_name_select = $("#edit_items_name-select option:selected");
+        var edit_variables_id = $('#edit_variables_id').val();
+        var edit_variables_name = $('#edit_variables_name').val();
+        var edit_variables_value = $('#edit_variables_value').val();
+        var items_name = items_name_select.text();
         var edit_describes = $('#edit_describes').val();
         $.ajax({
-            url: '/system/editSector',
+            url: '/interface/editvariables',
             type: 'post',
             contentType: 'application/json',
-            data: JSON.stringify({"id": edit_sector_id, "sector_name": edit_sector_name, "describes": edit_describes}),
+            data: JSON.stringify({"id": edit_variables_id, "variables_name": edit_variables_name, "variables_value": edit_variables_value, "items_name": items_name, "describes": edit_describes}),
             success: function () {
               $('#editModal').modal('hide');
               $("#tb_departments").bootstrapTable('refresh');
               lightyear.notify('保存成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
             },
             error: function(error) {
-			  lightyear.notify('system error！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
-			  console.log(error);
-		    }
+				lightyear.notify('system error！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
+				console.log(error);
+			}
         });
   });
 });
 
-
-//查询部门
+//查询公共参数
 $(document).ready(function(){
   $("#btn_query").click(function(){
     //获取模态框数据
       $("#tb_departments").bootstrapTable('refresh');
   });
 });
+
+//添加页面，查询项目
+$(document).ready(function() {　　
+	var state = 1;　　$.ajax({　　　　type: "POST",
+		　　　　url: "/system/itemsNameList",
+		　　　　dataType: "JSON",
+		　　　　data: {},
+		　　success: function(msg)　　 {
+
+			　　　　$("#items_name-select").prepend("<option value='0'>请选择项目</option>"); //添加第一个option值
+			　　　　$("#edit_items_name-select").prepend("<option value='0'>请选择项目</option>"); //添加第一个option值
+			　　　　
+			for (var i = 0; i < msg.rows.length; i++) {
+
+				　　　　 //如果在select中传递其他参数，可以在option 的value属性中添加参数
+				　　　　$("#items_name-select").append("<option value='" + i + "'>" + msg.rows[i] + "</option>");
+				　　　　$("#edit_items_name-select").append("<option value='" + i + "'>" + msg.rows[i] + "</option>");
+			}　　
+		},
+		error: function(error) {
+			lightyear.notify('system error！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
+			console.log(error);
+		}　
+	});
+});
+
+
 
 </script>
 </body>

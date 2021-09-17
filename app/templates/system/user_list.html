@@ -3,11 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>bootstrap-table - 后台管理系统模板</title>
-<link rel="icon" href="favicon.ico" type="image/ico">
-<meta name="keywords" content="后台模板,后台管理系统,光年HTML模板">
-<meta name="description" content="一个基于Bootstrap v3.3.7的后台管理系统的HTML模板。">
-<meta name="author" content="yinqi">
+<title>用户管理</title>
+<link rel="icon" href="favicon.ico" type="../static/image/ico">
 <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
 <link href="../../static/css/materialdesignicons.min.css" rel="stylesheet">
 <link href="../../static/css/animate.css" rel="stylesheet">
@@ -248,9 +245,11 @@ $('#tb_departments').bootstrapTable({
     columns: [{
         checkbox: true    // 是否显示复选框
     }, {
-        field: 'id',
-        title: '用户ID',
-        sortable: true    // 是否排序
+        field: '',
+        title: '序号',
+        formatter: function (value, row, index) {
+        return index+1;
+        }
     }, {
         field: 'login_name',
         title: '登录名称'
@@ -434,8 +433,13 @@ $(document).ready(function(){
             success: function () {
               $('#addModal').modal('hide');
               $("#tb_departments").bootstrapTable('refresh');
+              location.reload(true);
               lightyear.notify('添加成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
-            }
+            },
+            error: function(error) {
+				lightyear.notify('system error！', 'danger', 100, 'mdi-emoticon-sad', 'top', 'center');
+				console.log(error);
+			}
         });
   });
 });
@@ -462,12 +466,14 @@ $(document).ready(function(){
               $('#editModal').modal('hide');
               $("#tb_departments").bootstrapTable('refresh');
               lightyear.notify('保存成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
-            }
+            },
+            error: function(error) {
+				lightyear.notify('system error！', 'danger', 100, 'mdi-emoticon-sad', 'top', 'center');
+				console.log(error);
+			}
         });
   });
 });
-
-
 
 
 //查询用户
@@ -480,59 +486,60 @@ $(document).ready(function(){
 
 
 //添加页面，查询部门
-$(document).ready(function(){
-  //$("#department-select").empty();//清空select列表数据
-　　var state = 1;
-　　$.ajax({
-　　　　type : "POST",
-　　　　url : "/system/sectorNameList",
-　　　　dataType : "JSON",
-　　　　data : {},
-　　success : function(msg)
-　　{
+$(document).ready(function() {
+	//$("#department-select").empty();//清空select列表数据
+	　　
+	var state = 1;　　$.ajax({　　　　type: "POST",
+		　　　　url: "/system/sectorNameList",
+		　　　　dataType: "JSON",
+		　　　　data: {},
+		　　success: function(msg)　　 {
 
-　　　　$("#department-select").prepend("<option value='0'>请选择部门</option>");//添加第一个option值
-　　　　for (var i = 0; i < msg.rows.length; i++) {
+			　　　　$("#department-select").prepend("<option value='0'>请选择部门</option>"); //添加第一个option值
+			　　　　
+			for (var i = 0; i < msg.rows.length; i++) {
 
-　　　　//如果在select中传递其他参数，可以在option 的value属性中添加参数
-　　　　$("#department-select").append("<option value='"+i+"'>"+msg.rows[i]+"</option>");
+				　　　　 //如果在select中传递其他参数，可以在option 的value属性中添加参数
+				　　　　$("#department-select").append("<option value='" + i + "'>" + msg.rows[i] + "</option>");
 
-　　　　//$("#department-select").append("<option>"+msg.rows[i]+"</option>");
-　　}
+				　　　　 //$("#department-select").append("<option>"+msg.rows[i]+"</option>");
+				　　
+			}
 
-　　},error:function(){
-　　alertLayer("获取数据失败","error");
-　　}
-　　});
+			　　
+		},
+		error: function(error) {
+			lightyear.notify('system error！', 'danger', 100, 'mdi-emoticon-sad', 'top', 'center');
+			console.log(error);
+		}　　
+	});
 });
 
 //编辑页面，查询部门
-$(document).ready(function(){
-   //$("#edit_department-select").empty();//清空select列表数据
-　　var state = 1;
-　　$.ajax({
-　　　　type : "POST",
-　　　　url : "/system/sectorNameList",
-　　　　dataType : "JSON",
-　　　　data : {},
-　　success : function(msg)
-　　{
-　　　　$("#edit_department-select").prepend("<option value='0'>请选择部门</option>");//添加第一个option值
-　　　　for (var i = 1; i < msg.rows.length; i++) {
-  　　　　//如果在select中传递其他参数，可以在option 的value属性中添加参数
-  　　　　$("#edit_department-select").append("<option value='"+i+"'>"+msg.rows[i]+"</option>");
+$(document).ready(function() {
+	//$("#edit_department-select").empty();//清空select列表数据
+	　　
+	var state = 1;　　$.ajax({　　　　type: "POST",
+		　　　　url: "/system/sectorNameList",
+		　　　　dataType: "JSON",
+		　　　　data: {},
+		　　success: function(msg)　　 {　　　　$("#edit_department-select").prepend("<option value='0'>请选择部门</option>"); //添加第一个option值
+			　　　　
+			for (var i = 0; i < msg.rows.length; i++) {　　　　 //如果在select中传递其他参数，可以在option 的value属性中添加参数
+				　　　　$("#edit_department-select").append("<option value='" + i + "'>" + msg.rows[i] + "</option>");
 
-  　　　　//$("#department-select").append("<option>"+msg.rows[i]+"</option>");
+				　　　　 //$("#department-select").append("<option>"+msg.rows[i]+"</option>");
+				　　
+			}
 
-
-　　}
-
-　　},error:function(){
-　　alertLayer("获取数据失败","error");
-　　}
-　　});
+			　　
+		},
+		error: function(error) {
+			lightyear.notify('system error！', 'danger', 100, 'mdi-emoticon-sad', 'top', 'center');
+			console.log(error);
+		}　　
+	});
 });
-
 
 
 

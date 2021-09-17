@@ -18,4 +18,3 @@ logPath = os.path.join(currentPath,'logs')
 
 
 
-

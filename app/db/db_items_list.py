@@ -3,6 +3,7 @@
 
 import string
 import time
+import uuid
 
 from app.models.mysql_tools import MsqlTools
 
@@ -48,11 +49,12 @@ class db_items_list:
         :return:
         """
         now_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        id = uuid.uuid4()
 
         dbUtil = MsqlTools()
         sql = string.Template(
-            'insert into t_items (items_name,create_user,create_time,describes) values ("$items_name","$create_user","$create_time","$describes");')
-        sql = sql.substitute(items_name=items_name, create_user=create_user, create_time=now_time, describes=describes)
+            'insert into t_items (id, items_name,create_user,create_time,describes) values ("$id","$items_name","$create_user","$create_time","$describes");')
+        sql = sql.substitute(id=id, items_name=items_name, create_user=create_user, create_time=now_time, describes=describes)
         str = MsqlTools.save(dbUtil, sql)
         return str
 
@@ -82,7 +84,19 @@ class db_items_list:
 
         return  result
 
+    def items_name(self):
+        """
+        获取项目名称列表
+        :return:
+        """
+        dbUtil = MsqlTools()
 
+        sql = 'select items_name from t_items order by create_time asc;'
+        items_name = MsqlTools.get_all(dbUtil, sql)
+        result = []
+        for i in items_name:
+            result.append(i[0])
+        return result
 
 
 if __name__ == '__main__':

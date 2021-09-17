@@ -3,3 +3,6 @@ bootstrap-flask
 qtawesome
 pymysql
 logzero
+PyYaml
+jsonpath
+requests

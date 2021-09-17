@@ -3,6 +3,7 @@
 
 import string
 import time
+import uuid
 
 from app.models.mysql_tools import MsqlTools
 
@@ -48,11 +49,12 @@ class db_sector_list:
         :return:
         """
         now_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        id = uuid.uuid4()
 
         dbUtil = MsqlTools()
         sql = string.Template(
-            'insert into t_sector (sector_name,member,create_time,describes) values ("$sector_name","$member","$create_time","$describes");')
-        sql = sql.substitute(sector_name=sector_name, member=0, create_time=now_time, describes=describes)
+            'insert into t_sector (id,sector_name,member,create_time,describes) values ("$id","$sector_name","$member","$create_time","$describes");')
+        sql = sql.substitute(id=id, sector_name=sector_name, member=0, create_time=now_time, describes=describes)
         str = MsqlTools.save(dbUtil, sql)
         return str
 

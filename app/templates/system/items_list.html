@@ -3,11 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>bootstrap-table - 后台管理系统模板</title>
-<link rel="icon" href="favicon.ico" type="image/ico">
-<meta name="keywords" content="后台模板,后台管理系统,光年HTML模板">
-<meta name="description" content="一个基于Bootstrap v3.3.7的后台管理系统的HTML模板。">
-<meta name="author" content="yinqi">
+<title>项目管理</title>
+<link rel="icon" href="favicon.ico" type="../static/image/ico">
 <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
 <link href="../../static/css/materialdesignicons.min.css" rel="stylesheet">
 <link href="../../static/css/animate.css" rel="stylesheet">
@@ -16,10 +13,10 @@
 <!--对话框-->
 <link rel="stylesheet" href="../../static/js/jconfirm/jquery-confirm.min.css">
 </head>
-  
+
 <body>
 <div class="container-fluid p-t-15">
-  
+
   <div class="row">
     <div class="col-lg-12">
       <div class="card">
@@ -44,13 +41,13 @@
           </form>
 
           <table id="tb_departments"></table>
- 
+
         </div>
       </div>
     </div>
-    
+
   </div>
-  
+
 </div>
 
 <div class="modal fade" id="addeModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
@@ -173,9 +170,9 @@ $('#tb_departments').bootstrapTable({
     //clickToSelect: true,     // 是否启用点击选中行
     showColumns: true,         // 是否显示所有的列
     showRefresh: true,         // 是否显示刷新按钮
-    
+
     //showToggle: true,        // 是否显示详细视图和列表视图的切换按钮(clickToSelect同时设置为true时点击会报错)
-  
+
     pagination: true,                    // 是否显示分页
     sortOrder: "asc",                    // 排序方式
     queryParams: function(params) {
@@ -194,16 +191,18 @@ $('#tb_departments').bootstrapTable({
     pageSize: 10,                        // 每页的记录行数
     pageList: [10, 25, 50, 100],         // 可供选择的每页的行数
     //search: true,                      // 是否显示表格搜索，此搜索是客户端搜索
-    
+
     //showExport: true,        // 是否显示导出按钮, 导出功能需要导出插件支持(tableexport.min.js)
     //exportDataType: "basic", // 导出数据类型, 'basic':当前页, 'all':所有数据, 'selected':选中的数据
-  
+
     columns: [{
         checkbox: true    // 是否显示复选框
     }, {
-        field: 'id',
-        title: '项目ID',
-        sortable: true    // 是否排序
+        field: '',
+        title: '序号',
+        formatter: function (value, row, index) {
+        return index+1;
+        }
     }, {
         field: 'items_name',
         title: '项目名称'
@@ -302,28 +301,36 @@ function showUser(row)
 }
 
 //添加项目
-$(document).ready(function(){
-  $("#btn_submit").click(function(){
-    //获取模态框数据
+$(document).ready(function() {
+    $("#btn_submit").click(function() {
+        //获取模态框数据
         var items_name = $('#items_name').val();
         var describes = $('#describes').val();
         $.ajax({
             url: '/system/addItems',
             type: 'post',
             contentType: 'application/json',
-            data: JSON.stringify({"items_name": items_name, "describes": describes}),
-            success: function () {
-                 $('#addeModal').modal('hide');
-                 $("#tb_departments").bootstrapTable('refresh');
-                 lightyear.notify('添加成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
-            }
+            data: JSON.stringify({
+                "items_name": items_name,
+                "describes": describes
+            }),
+            success: function() {
+                $('#addeModal').modal('hide');
+                $("#tb_departments").bootstrapTable('refresh');
+                location.reload(true);
+                lightyear.notify('添加成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
+            },
+            error: function(error) {
+              lightyear.notify('system error！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
+			  console.log(error);
+		    }
         });
-  });
+    });
 });
 
 //编辑项目
-$(document).ready(function(){
-  $("#btn_edit").click(function(){
+$(document).ready(function() {
+    $("#btn_edit").click(function() {
         //获取模态框数据
         var edit_items_id = $('#edit_items_id').val();
         var edit_items_name = $('#edit_items_name').val();
@@ -332,14 +339,22 @@ $(document).ready(function(){
             url: '/system/editItems',
             type: 'post',
             contentType: 'application/json',
-            data: JSON.stringify({"id": edit_items_id, "items_name": edit_items_name, "describes": edit_describes}),
-            success: function () {
-              $('#editModal').modal('hide');
-              $("#tb_departments").bootstrapTable('refresh');
-              lightyear.notify('保存成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
-            }
+            data: JSON.stringify({
+                "id": edit_items_id,
+                "items_name": edit_items_name,
+                "describes": edit_describes
+            }),
+            success: function() {
+                $('#editModal').modal('hide');
+                $("#tb_departments").bootstrapTable('refresh');
+                lightyear.notify('保存成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
+            },
+            error: function(error) {
+			  lightyear.notify('system error！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
+			  console.log(error);
+		    }
         });
-  });
+    });
 });
 
 //查询项目

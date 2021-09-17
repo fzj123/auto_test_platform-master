@@ -3,6 +3,9 @@
 
 import string
 import time
+import uuid
+
+from flask import session
 
 from app.models.mysql_tools import MsqlTools
 
@@ -45,4 +48,47 @@ class db_log_list:
 
         return results, total
 
+    def add_log(self, log_name, operation_type, operation_status, log_describes):
+        """
+        添加日志
+        :return:
+        """
+        now_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
+        list = session.get('user', None)
+        operation_user = list[0]["username"]
+        sector_name = self.sector_user(operation_user)
+        id = uuid.uuid4()
+
+        dbUtil = MsqlTools()
+        sql = string.Template(
+            'insert into t_log (id,log_name,operation_type,operation_user,sector_name,operation_status,operation_time,log_describes) values ("$id","$log_name","$operation_type","$operation_user","$sector_name","$operation_status","$operation_time","$log_describes");')
+        sql = sql.substitute(id=id, log_name=log_name, operation_type=operation_type, operation_user=operation_user,
+                             sector_name=sector_name, operation_status=operation_status, operation_time=now_time,
+                             log_describes=log_describes)
+        result = MsqlTools.save(dbUtil, sql)
+        return result
+
+
+    def sector_user(self, login_name):
+        """
+        登录名称查询所属部门
+        :return:
+        """
+        dbUtil = MsqlTools()
+
+        sql = 'select department from t_user WHERE login_name = "$login_name";'
+
+        sql = string.Template(
+            'select department from t_user WHERE login_name = "$login_name";')
+        sql = sql.substitute(login_name=login_name)
+        sector_name = MsqlTools.get_all(dbUtil, sql)
+        result = sector_name[0][0]
+
+        return result
+
+if __name__ == '__main__':
+
+    s = db_log_list()
+    a = s.add_log('添加日志','添加','成功','1111111111111111')
+    print(a)

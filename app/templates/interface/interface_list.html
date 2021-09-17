@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>接口管理</title>
+<link rel="icon" href="favicon.ico" type="../static/image/ico">
+<link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../static/css/materialdesignicons.min.css" rel="stylesheet">
+<link href="../../static/css/animate.css" rel="stylesheet">
+<link href="../../static/css/style.min.css" rel="stylesheet">
+<link href="../../static/js/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+<!--对话框-->
+<link rel="stylesheet" href="../../static/js/jconfirm/jquery-confirm.min.css">
+</head>
+
+<body>
+<div class="container-fluid p-t-15">
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header"><h4>接口管理</h4></div>
+        <div class="card-body">
+          <form class="form-inline" action="interface_list.html" method="post" onsubmit="return false;">
+            <div class="form-group">
+              <div class="col-md-7">
+                <input class="form-control" type="text" id="interfaceName" name="interfaceName" placeholder="请输入接口名称..">
+              </div>
+            </div>
+            <div class="form-group">
+              <button id="btn_query" type="button" class="btn btn-secondary m-r-5">
+              <span class="mdi mdi-magnify" aria-hidden="true"></span>查询
+              </button>
+            </div>
+            <div class="form-group">
+              <button id="btn_add" type="button" class="btn btn-primary m-r-5" data-toggle="modal" data-target="#addeModal" data-whatever="@mdo">
+              <span class="mdi mdi-plus" aria-hidden="true"></span>新增
+              </button>
+            </div>
+          </form>
+
+          <table id="tb_departments"></table>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="modal fade" id="addeModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="addModalLabel">添加接口</h4>
+                </div>
+                <div class="modal-body">
+                  <form>
+                    <div class="form-group">
+                      <label for="interface_name" class="control-label">接口名称：</label>
+                      <input type="text" class="form-control" id="interface_name">
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label">请求：</label>
+                      <div class="input-group">
+                        <div class="input-group-btn">
+                          <input type="hidden" name="search_field" id="search-field" value="title">
+                          <button class="btn btn-default dropdown-toggle" id="search-btn" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">GET<span class="caret"></span></button>
+                          <ul class="dropdown-menu">
+                            <li> <a tabindex="-1" href="javascript:void(0)" data-field="title">GET</a> </li>
+                            <li> <a tabindex="-1" href="javascript:void(0)" data-field="cat_name">POST</a> </li>
+                          </ul>
+                        </div>
+                        <input type="text" class="form-control" id="interface_path" value="" name="keyword" placeholder="请输入路径">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="items_name-select" class="control-label">项目名称：</label>
+                        <select class="form-control" id="items_name-select" name="items_name-select" size="1">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="head-select" class="control-label">负责人：</label>
+                        <select class="form-control" id="head-select" name="head-select" size="1">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="describes" class="control-label">描述内容：</label>
+                      <textarea class="form-control" id="describes" name="describes" rows="6" placeholder="描述内容.."></textarea>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" id="btn_submit" >添加</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+              </div>
+            </div>
+</div>
+
+<div class="modal fade text-center" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModallLabel">
+ <div class="modal-dialog" style="display: inline-block; width: 80%;">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="editModalLabel">编辑接口</h4>
+   </div>
+   <div class="modal-body">
+    <div class="row">
+     <div class="col-lg-12">
+      <div class="card">
+       <div class="card-header">
+        <h4>基础信息</h4>
+       </div>
+       <div class="card-body">
+        <div class="row">
+         <form class="form-horizontal col-md-6" role="form">
+          <div class="form-group">
+           <label for="edit_interface_id" class="col-sm-3 control-label">接口id：</label>
+           <div class="col-sm-6">
+            <input type="text" class="form-control" id="edit_interface_id" />
+           </div>
+          </div>
+          <div class="form-group">
+           <label for="edit_interface_name" class="col-sm-3 control-label">接口名称：</label>
+           <div class="col-sm-6">
+            <input type="text" class="form-control" id="edit_interface_name" />
+           </div>
+          </div>
+          <div class="form-group">
+           <label for="edit_items-select" class="col-sm-3 control-label">项目名称：</label>
+           <div class="col-sm-6">
+            <select class="form-control" id="edit_items-select" name="edit_items-select" size="1">
+            </select>
+           </div>
+          </div>
+          <div class="form-group">
+           <label for="edit_head-select" class="col-sm-3 control-label">负责人：</label>
+           <div class="col-sm-6">
+            <select class="form-control" id="edit_head-select" name="edit_head-select" size="1">
+            </select>
+           </div>
+          </div>
+         </form>
+         <form class="form-horizontal col-md-6" role="form">
+          <div class="form-group">
+           <label for="edit_search-field" class="col-sm-3 control-label">请求：</label>
+           <div class="col-sm-6">
+            <div class="input-group">
+             <div class="input-group-btn">
+              <input type="hidden" name="edit_search_field" id="edit_search-field" value="title" />
+              <button class="btn btn-default dropdown-toggle" id="edit_search-btn" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">GET<span class="caret"></span></button>
+              <ul class="dropdown-menu">
+               <li> <a tabindex="-1" href="javascript:void(0)" data-field="title">GET</a> </li>
+               <li> <a tabindex="-1" href="javascript:void(0)" data-field="cat_name">POST</a> </li>
+              </ul>
+             </div>
+             <input type="text" class="form-control" id="edit_interface_path" value="" name="edit_interface_path" placeholder="请输入路径" />
+            </div>
+           </div>
+          </div>
+          <div class="form-group">
+           <label for="interface_check" class="col-sm-3 control-label">校验状态：</label>
+           <div class="col-sm-6">
+            <input type="text" class="form-control" id="interface_check" />
+           </div>
+          </div>
+          <div class="form-group">
+           <label for="edit_describes" class="col-sm-3 control-label">描述：</label>
+           <div class="col-sm-6">
+            <textarea class="form-control" id="edit_describes" name="edit_describes" rows="2" placeholder="描述内容.."></textarea>
+           </div>
+          </div>
+         </form>
+        </div>
+       </div>
+      </div>
+     </div>
+
+        <div class="col-md-12">
+              <div class="card">
+                <div class="card-header"><h4>请求参数</h4></div>
+                <div class="card-body">
+
+                  <ul id="myTabs" class="nav nav-tabs" role="tablist">
+                    <li class="active"><a href="#header" id="header-tab" role="tab" data-toggle="tab">请求头</a></li>
+                    <li><a href="#parameters" role="tab" id="parameters-tab" data-toggle="tab">参数</a></li>
+                    <li><a href="#request" role="tab" id="request-tab" data-toggle="tab">请求体</a></li>
+                    <li><a href="#assert" role="tab" id="assert-tab" data-toggle="tab">断言</a></li>
+                  </ul>
+                  <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade active in" id="header">
+                        <button class="btn btn-info" type="button" data-toggle="tooltip" title="新增" id="addHeaderBtn" onclick="addHeaderBtn(this)">
+                            <span class="mdi mdi-plus-box"></span>
+                        </button>
+
+                    </div>
+                    <div class="tab-pane fade" id="parameters">
+                        <button class="btn btn-info" type="button" data-toggle="tooltip" title="新增" id="addParameters" onclick="addParameters(this)">
+                            <span class="mdi mdi-plus-box"></span>
+                        </button>
+
+                    </div>
+                    <div class="tab-pane fade" id="request">
+                        <div class="col-xs-12">
+                            <textarea class="form-control" id="request-textarea-input" name="request-textarea-input" rows="12" placeholder="内容.."></textarea>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="assert">
+                        <button class="btn btn-info" type="button" data-toggle="tooltip" title="新增" id="addAssert" onclick="addAssert(this)">
+                            <span class="mdi mdi-plus-box"></span>
+                        </button>
+
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+        </div>
+
+        <div class="col-md-12">
+              <div class="card">
+                <div class="card-header"><h4>返回结果</h4></div>
+                <div class="card-body">
+
+                  <ul id="backTabs" class="nav nav-tabs" role="tablist">
+                    <li class="active"><a href="#backHeader" id="backHeader-tab" role="tab" data-toggle="tab">响应头</a></li>
+                    <li><a href="#response" role="tab" id="response-tab" data-toggle="tab">响应体</a></li>
+                    <li><a href="#stutus" role="tab" id="stutus-tab" data-toggle="tab">状态码</a></li>
+                  </ul>
+                  <div id="backTabContent" class="tab-content">
+                    <div class="tab-pane fade active in" id="backHeader">
+                        <div class="col-xs-12">
+                            <textarea class="form-control" id="backHeader-textarea-input" name="backHeader-textarea-input" rows="6" placeholder="响应头.."></textarea>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="response">
+                        <div class="col-xs-12">
+                            <textarea class="form-control" id="response-textarea-input" name="response-textarea-input" rows="6" placeholder="响应体.."></textarea>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="stutus">
+                        <div class="col-xs-12">
+                            <textarea class="form-control" id="stutus-textarea-input" name="stutus-textarea-input" rows="6" placeholder="状态码.."></textarea>
+                        </div>
+
+
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+        </div>
+
+
+     </div>
+    </div>
+    <div class="modal-footer">
+     <button type="button" class="btn btn-primary" id="btn_edit">保存</button>
+     <button type="button" class="btn btn-default" data-dismiss="modal" id="modal_close">关闭</button>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<script type="text/javascript" src="../../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../../static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../static/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="../../static/js/bootstrap-table/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="../../static/js/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+
+<!--行内编辑插件-->
+<link href="../../static/js/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.min.css" rel="stylesheet">
+<script type="text/javascript" src="../../static/js/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script type="text/javascript" src="../../static/js/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js"></script>
+<!--对话框-->
+<script src="../../static/js/jconfirm/jquery-confirm.min.js"></script>
+<!--消息提示-->
+<script src="../../static/js/bootstrap-notify.min.js"></script>
+<script type="text/javascript" src="../../static/js/lightyear.js"></script>
+<script type="text/javascript" src="../../static/js/main.min.js"></script>
+<script type="text/javascript">
+$('#tb_departments').bootstrapTable({
+    classes: 'table table-bordered table-hover table-striped',
+    url: '/interface/interfaceList',
+    method: 'get',
+    uniqueId: 'id',
+    idField: 'id',             // 每行的唯一标识字段
+    toolbar: '#toolbar',       // 工具按钮容器
+    //clickToSelect: true,     // 是否启用点击选中行
+    showColumns: true,         // 是否显示所有的列
+    showRefresh: true,         // 是否显示刷新按钮
+
+    //showToggle: true,        // 是否显示详细视图和列表视图的切换按钮(clickToSelect同时设置为true时点击会报错)
+
+    pagination: true,                    // 是否显示分页
+    sortOrder: "asc",                    // 排序方式
+    queryParams: function(params) {
+        var temp = {
+            limit: params.limit,         // 每页数据量
+            offset: params.offset,       // sql语句起始索引
+            page: (params.offset / params.limit) + 1,
+            sort: params.sort,           // 排序的列名
+            sortOrder: 'desc',      // 排序方式'asc' 'desc'
+            interfaceList_name:$("#interfaceName").val()
+        };
+        return temp;
+    },                                   // 传递参数
+    sidePagination: "server",            // 分页方式：client客户端分页，server服务端分页
+    pageNumber: 1,                       // 初始化加载第一页，默认第一页
+    pageSize: 10,                        // 每页的记录行数
+    pageList: [10, 25, 50, 100],         // 可供选择的每页的行数
+    //search: true,                      // 是否显示表格搜索，此搜索是客户端搜索
+
+    //showExport: true,        // 是否显示导出按钮, 导出功能需要导出插件支持(tableexport.min.js)
+    //exportDataType: "basic", // 导出数据类型, 'basic':当前页, 'all':所有数据, 'selected':选中的数据
+
+    columns: [{
+        checkbox: true    // 是否显示复选框
+    }, {
+        field: '',
+        title: '序号',
+        formatter: function (value, row, index) {
+        return index+1;
+        }
+    }, {
+        field: 'interface_name',
+        title: '接口名称'
+    }, {
+        field: 'items_name',
+        title: '所属项目',
+    },{
+        field: 'interface_status',
+        title: '接口状态',
+    },{
+        field: 'request_type',
+        title: '请求类型',
+    },{
+        field: 'head',
+        title: '负责人',
+    }, {
+        field: 'interface_path',
+        title: '接口路径',
+    }, {
+        field: 'last_time',
+        title: '最后更新时间'
+    }, {
+        field: 'interface_check',
+        title: '接口校验'
+    }, {
+        field: 'describes',
+        title: '描述'
+    }, {
+        field: 'operate',
+        title: '操作',
+        formatter: btnGroup,  // 自定义方法
+        events: {
+            'click .edit-btn': function (event, value, row, index) {
+                edit(row);
+            },
+            'click .del-btn': function (event, value, row, index) {
+                del(row.id);
+            },
+            'click .run-btn': function (event, value, row, index) {
+                run(row);
+            }
+        }
+    }],
+    onLoadSuccess: function(data){
+        $("[data-toggle='tooltip']").tooltip();
+    }
+});
+
+// 操作按钮
+function btnGroup ()
+{
+    let html =
+        '<a href="#!" class="btn btn-xs btn-default m-r-5 edit-btn" title="编辑" data-toggle="tooltip"><i class="mdi mdi-pencil"></i></a>' +
+        '<a href="#!" class="btn btn-xs btn-default m-r-5 run-btn" title="测试" data-toggle="tooltip"><i class="mdi mdi-rocket"></i></a>' +
+        '<a href="#!" class="btn btn-xs btn-default del-btn" title="删除" data-toggle="tooltip"><i class="mdi mdi-window-close"></i></a>';
+    return html;
+}
+
+
+$(document).on('click','#modal_close',function(){
+    location.reload(true);
+})
+$(document).on('click','#close',function(){
+    location.reload(true);
+})
+
+
+// 操作方法 - 编辑
+function edit(row)
+{
+
+    $("#editModal").bootstrapTable('refresh');
+    var data = row;
+    $("#edit_interface_id").val(data.id);
+    $("#edit_interface_name").val(data.interface_name);
+    var items_name = data.items_name;
+    var head = data.head;
+    $("#edit_items-select option").each(function (){
+        if($(this).text()==items_name){
+            $(this).attr('selected',true);
+        }
+    });
+    $("#edit_head-select option").each(function (){
+        if($(this).text()==head){
+            $(this).attr('selected',true);
+        }
+    });
+    var request_type = data.request_type
+    $('#edit_search-btn').html(request_type + ' <span class="caret"></span>');
+    $("#edit_interface_path").val(data.interface_path);
+    $("#interface_check").val(data.interface_check);
+    $("#edit_describes").val(data.describes);
+    $("#request-textarea-input").val(data.interface_request);
+
+
+
+    //请求头
+    var interface_header = data.interface_header;
+    var header = JSON.parse(interface_header);
+
+    for (var rowCount in header) {
+            var a = header[rowCount]
+        html = '<div class="input-group centerIp">'+
+          '<label class="input-group-addon">名称：</label>'+
+                '<input class="form-control header_name" type="text" name="header_name'+rowCount+'" id="header_name'+rowCount+'" >'+
+          ' <label class="input-group-addon">值：</label>'+
+                ' <input class="form-control header_value" type="text" name="header_value'+rowCount+'" id="header_value'+rowCount+'" >'+
+          ' <span class="input-group-btn">'+
+                '<button class="btn btn-info" type="button" data-toggle="tooltip" title="删除" id="delBtn"><span class="mdi mdi-close-box-outline"></span></button>'+
+          ' </span>'+
+        '</div>'
+        $('#addHeaderBtn').before(html)
+        $("#header_name"+rowCount).val(header[rowCount].name);
+        $("#header_value"+rowCount).val(header[rowCount].value);
+    }
+    //请求参数
+    var interface_parameter = data.interface_parameter;
+    var parameter = JSON.parse(interface_parameter);
+
+    for (var rowCount in parameter) {
+        var a = parameter[rowCount]
+        html = '<div class="input-group centerIp">'+
+          '<label class="input-group-addon">名称：</label>'+
+                '<input class="form-control parameter_name" type="text" name="parameter_name'+rowCount+'" id="parameter_name'+rowCount+'" >'+
+          ' <label class="input-group-addon">值：</label>'+
+                ' <input class="form-control parameter_value" type="text" name="parameter_value'+rowCount+'" id="parameter_value'+rowCount+'" >'+
+          ' <span class="input-group-btn">'+
+                '<button class="btn btn-info" type="button" data-toggle="tooltip" title="删除" id="delBtn"><span class="mdi mdi-close-box-outline"></span></button>'+
+          ' </span>'+
+        '</div>'
+        $('#addParameters').before(html)
+        $("#parameter_name"+rowCount).val(parameter[rowCount].name);
+        $("#parameter_value"+rowCount).val(parameter[rowCount].value);
+    }
+    //请求断言
+    var interface_assert = data.interface_assert;
+    var assert = JSON.parse(interface_assert);
+
+    for (var rowCount in assert) {
+        var a = assert[rowCount]
+        html = '<div class="input-group centerIp">'+
+          '<label class="input-group-addon">名称：</label>'+
+                '<input class="form-control assert_name" type="text" name="assert_name'+rowCount+'" id="assert_name'+rowCount+'" >'+
+          ' <label class="input-group-addon">值：</label>'+
+                ' <input class="form-control assert_value" type="text" name="assert_value'+rowCount+'" id="assert_value'+rowCount+'" >'+
+          ' <span class="input-group-btn">'+
+                '<button class="btn btn-info" type="button" data-toggle="tooltip" title="删除" id="delBtn"><span class="mdi mdi-close-box-outline"></span></button>'+
+          ' </span>'+
+        '</div>'
+        $('#addAssert').before(html)
+        $("#assert_name"+rowCount).val(assert[rowCount].name);
+        $("#assert_value"+rowCount).val(assert[rowCount].value);
+    }
+    $('#editModal').modal('show');
+
+}
+
+
+
+// 操作方法 - 删除
+function del(id)
+{
+    var interfaceId = id
+    $.alert({
+        title: '是否删除',
+        content: '确定删除此行数据吗？',
+		buttons: {
+			confirm: {
+				text: '确认',
+				btnClass: 'btn-primary',
+				action: function(){
+                    $.ajax({
+                      url: '/interface/deleteInterface',
+                      data:{"interfaceId":interfaceId},
+                      type: "get",
+                      dataType:"json",
+                      success: function (data) {
+                        $("#tb_departments").bootstrapTable('refresh');
+                        if(data.code == 200){
+                          lightyear.notify('删除成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
+                        }else{
+                          lightyear.notify('添加失败！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
+                        }
+                      },
+			          error: function(error) {
+                         lightyear.notify('system error！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
+				         console.log(error);
+			          }
+                    });
+
+				}
+			},
+			cancel: {
+				text: '取消',
+				action: function () {
+                  lightyear.notify('取消成功！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
+				}
+			}
+		}
+    });
+}
+// 操作方法 - 运行接口
+function run(row)
+{
+    alert("update 方法 , id = " + row.id);
+    $.ajax({
+			url: '/interface/runInterface',
+			type: 'post',
+			contentType: 'application/json',
+			data: JSON.stringify({
+				"id": row.id,
+				"items_name": row.items_name
+			}),
+			success: function() {
+				if(data.code == 200){
+                  lightyear.notify('测试成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
+                }else{
+                  lightyear.notify('测试失败！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
+                }
+			},
+			error: function(error) {
+				lightyear.notify('system error！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
+				console.log(error);
+			}
+		});
+
+}
+
+//添加接口
+$(document).ready(function() {
+	$("#btn_submit").click(function() {
+		//获取模态框数据
+		var head = $("#head-select option:selected");
+		var items_name = $("#items_name-select option:selected");
+
+		var interface_name = $('#interface_name').val();
+		var request_type = $('#search-btn').text();
+		var interface_path = $('#interface_path').val();
+		var head = head.text();
+		var items_name = items_name.text();
+		var describes = $('#describes').val();
+		$.ajax({
+			url: '/interface/addInterface',
+			type: 'post',
+			contentType: 'application/json',
+			data: JSON.stringify({
+				"interface_name": interface_name,
+				"request_type": request_type,
+				"interface_path": interface_path,
+				"head": head,
+				"items_name": items_name,
+				"describes": describes
+			}),
+			success: function() {
+				$('#addeModal').modal('hide');
+				$("#tb_departments").bootstrapTable('refresh');
+				location.reload(true);
+				lightyear.notify('添加成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
+			},
+			error: function(error) {
+				lightyear.notify('system error！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
+				console.log(error);
+			}
+		});
+	});
+});
+
+//编辑测试环境
+$(document).ready(function(){
+  $("#btn_edit").click(function(){
+        //获取模态框数据
+        //获取请求头数据
+        var header = new Array();
+        for (var i=0; i <= rowCount; i++){
+            var header_name = $('div .input-group #header_name'+i).val();
+            var header_value = $('div .input-group #header_value'+i).val();
+            if(( header_name != "" && header_name != undefined) && (header_value != "" && header_value != undefined)){
+                var obj = new Object();
+                obj['name'] = header_value;
+                obj['value'] = header_name;
+                header.push(obj);
+            }
+        }
+        var interface_header = JSON.stringify(header);
+
+        //获取请求参数数据
+        var parameter = new Array();
+        for (var i=0; i <= rowCount; i++){
+            var parameter_name = $('div .input-group #parameter_name'+i).val();
+            var parameter_value = $('div .input-group #parameter_value'+i).val();
+            if(( parameter_name != "" && parameter_name != undefined) && (parameter_value != "" && parameter_value != undefined)){
+                var obj = new Object();
+                obj['name'] = parameter_name;
+                obj['value'] = parameter_value;
+                parameter.push(obj);
+            }
+        }
+        var interface_parameter = JSON.stringify(parameter);
+
+        //获取请求断言数据
+        var assert = new Array();
+        for (var i=0; i <= rowCount; i++){
+            var assert_name = $('div .input-group #assert_name'+i).val();
+            var assert_value = $('div .input-group #assert_value'+i).val();
+            if(( assert_name != "" && assert_name != undefined) && (assert_value != "" && assert_value != undefined)){
+                var obj = new Object();
+                obj['name'] = assert_name;
+                obj['value'] = assert_value;
+                assert.push(obj);
+            }
+        }
+        var interface_assert = JSON.stringify(assert);
+
+
+
+        var head = $("#edit_head-select option:selected");
+		var items_name = $("#edit_items-select option:selected");
+
+        var edit_interface_id = $('#edit_interface_id').val();
+		var edit_interface_name = $('#edit_interface_name').val();
+		var request_type = $('#edit_search-btn').text();
+		var interface_path = $('#edit_interface_path').val();
+		var head = head.text();
+		var items_name = items_name.text();
+		var describes = $('#edit_describes').val();
+		var interface_request = $('#request-textarea-input').val();
+
+        $.ajax({
+            url: '/interface/editInterface',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({"id": edit_interface_id, "interface_name": edit_interface_name, "request_type": request_type, "interface_path": interface_path, "head": head, "items_name": items_name, "describes": describes, "interface_request": interface_request, "interface_header": interface_header, "interface_parameter": interface_parameter, "interface_assert": interface_assert}),
+            success: function () {
+              $('#editModal').modal('hide');
+              $("#tb_departments").bootstrapTable('refresh');
+              location.reload(true);
+              lightyear.notify('保存成功！', 'success', 100, 'mdi mdi-emoticon-happy', 'top', 'center');
+            },
+            error: function(error) {
+				lightyear.notify('system error！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
+				console.log(error);
+			}
+        });
+  });
+});
+
+//查询接口
+$(document).ready(function(){
+  $("#btn_query").click(function(){
+    //获取模态框数据
+      $("#tb_departments").bootstrapTable('refresh');
+  });
+});
+
+//查询项目
+$(document).ready(function() {　　
+	var state = 1;　　$.ajax({　　　　type: "POST",
+		　　　　url: "/system/itemsNameList",
+		　　　　dataType: "JSON",
+		　　　　data: {},
+		　　success: function(msg)　　 {
+
+			　　　　$("#items_name-select").prepend("<option value='0'>请选择项目</option>"); //添加第一个option值
+			　　　　$("#edit_items-select").prepend("<option value='0'>请选择项目</option>"); //添加第一个option值
+			　　　　
+			for (var i = 0; i < msg.rows.length; i++) {
+
+				　　　　 //如果在select中传递其他参数，可以在option 的value属性中添加参数
+				　　　　$("#items_name-select").append("<option value='" + i + "'>" + msg.rows[i] + "</option>");
+				　　　　$("#edit_items-select").append("<option value='" + i + "'>" + msg.rows[i] + "</option>");
+			}　　
+		},
+		error: function(error) {
+			lightyear.notify('system error！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
+			console.log(error);
+		}　
+	});
+});
+
+
+
+//查询负责人
+$(document).ready(function() {　　
+	var state = 1;　　$.ajax({　　　　type: "POST",
+		　　　　url: "/system/userNameList",
+		　　　　dataType: "JSON",
+		　　　　data: {},
+		　　success: function(msg)　　 {
+
+			　　　　$("#head-select").prepend("<option value='0'>请选择负责人</option>"); //添加第一个option值
+			　　　　$("#edit_head-select").prepend("<option value='0'>请选择负责人</option>"); //添加第一个option值
+			　　　　
+			for (var i = 0; i < msg.rows.length; i++) {
+
+				　　　　 //如果在select中传递其他参数，可以在option 的value属性中添加参数
+				　　　　$("#head-select").append("<option value='" + i + "'>" + msg.rows[i] + "</option>");
+				　　　　$("#edit_head-select").append("<option value='" + i + "'>" + msg.rows[i] + "</option>");
+			}　　
+		},
+		error: function(error) {
+			lightyear.notify('system error！', 'danger', 100, 'mdi mdi-emoticon-sad', 'top', 'center');
+			console.log(error);
+		}　
+	});
+});
+
+//请求类型选择
+$(function(){
+    $('.dropdown-menu a').click(function() {
+        var field = $(this).data('field') || '';
+        $('#search-field').val(field);
+        $('#edit_search-field').val(field);
+        $('#search-btn').html($(this).text() + ' <span class="caret"></span>');
+        $('#edit_search-btn').html($(this).text() + ' <span class="caret"></span>');
+    });
+});
+
+
+var rowCount = 0;//(资源)行数默认1行
+
+//添加资源请求头输入框
+function addHeaderBtn(obj){
+
+rowCount++
+ html = '<div class="input-group centerIp">'+
+  '<label class="input-group-addon">名称：</label>'+
+        '<input class="form-control header_name" type="text" name="header_name'+rowCount+'" id="header_name'+rowCount+'" >'+
+  ' <label class="input-group-addon">值：</label>'+
+        ' <input class="form-control header_value" type="text" name="header_value'+rowCount+'" id="header_value'+rowCount+'" >'+
+  ' <span class="input-group-btn">'+
+        '<button class="btn btn-info" type="button" data-toggle="tooltip" title="删除" id="delBtn"><span class="mdi mdi-close-box-outline"></span></button>'+
+  ' </span>'+
+'</div>'
+obj.insertAdjacentHTML('beforebegin',html)
+}
+
+$(document).on('click','#delBtn',function(){
+    var el = this.parentNode.parentNode ;
+    el.parentNode.removeChild(el)
+})
+
+//添加请求参数输入框
+function addParameters(obj){
+
+rowCount++
+ html = '<div class="input-group centerIp">'+
+  '<label class="input-group-addon">名称：</label>'+
+        '<input class="form-control parameter_name" type="text" name="parameter_name'+rowCount+'" id="parameter_name'+rowCount+'" >'+
+  ' <label class="input-group-addon">值：</label>'+
+        ' <input class="form-control parameter_value" type="text" name="parameter_value'+rowCount+'" id="parameter_value'+rowCount+'" >'+
+  ' <span class="input-group-btn">'+
+        '<button class="btn btn-info" type="button" data-toggle="tooltip" title="删除" id="delBtn"><span class="mdi mdi-close-box-outline"></span></button>'+
+  ' </span>'+
+'</div>'
+obj.insertAdjacentHTML('beforebegin',html)
+}
+
+//添加请求断言输入框
+function addAssert(obj){
+
+rowCount++
+ html = '<div class="input-group centerIp">'+
+  '<label class="input-group-addon">名称：</label>'+
+        '<input class="form-control assert_name" type="text" name="assert_name'+rowCount+'" id="assert_name'+rowCount+'" >'+
+  ' <label class="input-group-addon">值：</label>'+
+        ' <input class="form-control assert_value" type="text" name="assert_value'+rowCount+'" id="assert_value'+rowCount+'" >'+
+  ' <span class="input-group-btn">'+
+        '<button class="btn btn-info" type="button" data-toggle="tooltip" title="删除" id="delBtn"><span class="mdi mdi-close-box-outline"></span></button>'+
+  ' </span>'+
+'</div>'
+obj.insertAdjacentHTML('beforebegin',html)
+}
+
+
+
+
+</script>
+</body>
+</html>

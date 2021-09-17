@@ -6,6 +6,7 @@ import json
 
 from flask import Blueprint, render_template, request, jsonify
 from app.db.db_user_list import db_user_list
+from app.db.db_log_list import db_log_list
 from app.models.log import Logzero
 
 mod = Blueprint('user_list', __name__,
@@ -50,7 +51,7 @@ def user_list_query():
 def add_user():
     log.info('请求头：{0}'.format(request.headers))
     data = request.get_json()
-    log.info('返回结果：{0}'.format(data))
+    log.info('请求参数：{0}'.format(data))
     login_name = data['login_name']
     password = data['password']
     user_name = data['user_name']
@@ -67,9 +68,11 @@ def add_user():
     if result == 1:
         code = 200
         message = 'delete success!'
+        db_log_list().add_log('系统管理，用户管理添加用户','添加','成功',message)
     else:
         code = 500
         message = 'please try again!'
+        db_log_list().add_log('系统管理，用户管理添加用户', '添加', '失败', message)
     result = jsonify({'code': code, 'msg': message})
     return result
 
@@ -95,39 +98,42 @@ def edit_user():
     if result == 1:
         code = 200
         message = 'deit success!'
+        db_log_list().add_log('系统管理，用户管理编辑用户', '编辑', '成功', message)
     else:
         code = 500
         message = 'please try again!'
+        db_log_list().add_log('系统管理，用户管理编辑用户', '编辑', '失败', message)
     result = jsonify({'code': code, 'msg': message})
     return result
 
-#查询所有部门
-@mod.route('/system/sectorNameList', methods=['POST'])
-def sector_list():
-    log.info('请求头：{0}'.format(request.headers))
-    result = db_user_list().sector_name()
-    return_dict = {'rows': False}
-    return_dict['rows'] = result
 
-    return json.dumps(return_dict, ensure_ascii=False)
-
-#用户id删除用户
+#根据id删除用户
 @mod.route('/system/deleteUser', methods=['GET'])
 def delete_user():
 
     # 对参数进行操作
-    user_id = int(request.args.get('userId'))
+    user_id = request.args.get('userId')
 
     result = db_user_list().delete_user(user_id)
 
     if result == 1:
         code = 200
         message = 'delete success!'
+        db_log_list().add_log('系统管理，用户管理删除用户', '删除', '成功', message)
     else:
         code = 500
         message = 'please try again!'
+        db_log_list().add_log('系统管理，用户管理删除用户', '删除', '失败', message)
     result = jsonify({'code': code, 'msg': message})
     return result
 
+#查询所有用户
+@mod.route('/system/userNameList', methods=['POST'])
+def user_lists():
+    log.info('请求头：{0}'.format(request.headers))
+    result = db_user_list().user_name()
+    return_dict = {'rows': False}
+    return_dict['rows'] = result
 
+    return json.dumps(return_dict, ensure_ascii=False)
 

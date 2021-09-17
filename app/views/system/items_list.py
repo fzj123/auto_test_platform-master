@@ -50,7 +50,7 @@ def items_list_query():
 def add_items():
     log.info('请求头：{0}'.format(request.headers))
     data = request.get_json()
-    log.info('返回结果：{0}'.format(data))
+    log.info('请求参数：{0}'.format(data))
     items_name = data['items_name']
     describes = data['describes']
 
@@ -97,12 +97,12 @@ def edit_items():
     return result
 
 
-#用户id删除项目
+#根据id删除项目
 @mod.route('/system/deleteItems', methods=['GET'])
 def delete_items():
 
     # 对参数进行操作
-    itemsId = int(request.args.get('itemsId'))
+    itemsId = request.args.get('itemsId')
     result = db_items_list().delete_items(itemsId)
 
     if result == 1:
@@ -115,3 +115,12 @@ def delete_items():
 
     return result
 
+#查询所有项目名称
+@mod.route('/system/itemsNameList', methods=['POST'])
+def items_lists():
+    log.info('请求头：{0}'.format(request.headers))
+    result = db_items_list().items_name()
+    return_dict = {'rows': False}
+    return_dict['rows'] = result
+
+    return json.dumps(return_dict, ensure_ascii=False)

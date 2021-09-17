@@ -21,7 +21,7 @@ class MsqlTools:
         self.password = config.mysql_config['password']
         self.dbName = config.mysql_config['dbName']
         self.charsets = config.mysql_config['charsets']
-        log.info("配置文件：" + json.dumps(config.mysql_config))
+        log.info("数据库配置文件：" + json.dumps(config.mysql_config))
 
     # 链接数据库
     def get_con(self):
